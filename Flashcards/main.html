@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+<head>
+ <base target="_top">
+ <meta charset="UTF-8">
+ <title>HPCCSS 5B English Self-learning Platform</title>
+ <link rel="stylesheet" href="main.css">
+<link rel="stylesheet" href="flashcards.css">
+</head>
+<body>
+
+<header>
+  <div class="brand">
+    <h1>HPCCSS 5B English ALRAS</h1>
+    <p>Academic Learning Resources Administration System</p>
+  </div>
+  <button class="cta-button" onclick="openFlashcards()">Open Vocabulary Flashcards</button>
+</header>
+
+<main>
+  <section class="hero">
+    <div class="hero-copy">
+      <h2>ALRAS - English Section</h2>
+      <p>
+        Available Features: <br>
+        - Generic Vocabulary Flashcards <br>
+        - Wordle
+      </p>
+      <div class="hero-actions">
+        <button onclick="openFlashcards()">Open Flashcards</button>
+        <a class="secondary" href="#features">View Features</a>
+      </div>
+    </div>
+
+    <div class="hero-panel">
+      <div class="feature-list" id="features">
+        <div class="feature-card" onclick="openFlashcards()">
+          <span>1</span>
+          <div>
+            <h3>Generic Vocabulary Flashcards</h3>
+            <p>Tap to enter the built-in flashcard trainer and practice 50+ vocabulary words with meanings and example sentences.</p>
+          </div>
+        </div>
+        <div class="feature-card">
+          <span>2</span>
+          <div>
+            <h3>Self-paced Review</h3>
+            <p>Track your progress as you move through cards and revisit difficult vocabulary whenever you need.</p>
+          </div>
+        </div>
+        <div class="feature-card">
+          <span>3</span>
+          <div>
+            <h3>Modern Dashboard</h3>
+            <p>Enjoy a sleek dark interface designed for focused study sessions and easier long-term learning.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="app-screen" id="flashcard-app">
+    <div class="app-header">
+      <div>
+        <h3>Generic Vocabulary Flashcards</h3>
+        <p style="margin: 6px 0 0; color: var(--muted);">Touch the card to flip and reveal definitions.</p>
+      </div>
+      <button onclick="showLanding()">Back to Platform</button>
+    </div>
+
+    <div id="loading">Loading Vocabulary...</div>
+    <div id="app" style="display:none;">
+      <div class="flashcard" id="card" onclick="flipCard()">
+        <div class="card-inner">
+          <div class="card-front">
+            <h2 id="vocab-display"></h2>
+            <p class="hint">Tap to flip and reveal meaning</p>
+          </div>
+          <div class="card-back">
+            <div class="meaning" id="meaning-display"></div>
+            <div class="usage" id="usage-display"></div>
+            <div class="sentence" id="sentence-display"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="controls">
+        <button class="secondary" onclick="prevCard()" id="prev-btn">Previous</button>
+        <button class="primary" onclick="nextCard()" id="next-btn">Next</button>
+      </div>
+      <div class="progress" id="progress-text"></div>
+    </div>
+  </section>
+
+  <div class="feature-footer">
+    <div>
+      <strong>EN ALRAS</strong> is designed for HPCCSS students to learn and study English.
+    </div>
+    <p>Contact <@659584737081294868> on Discord for inquiries.</p>
+  </div>
+</main>
+
+<script src="main.js"></script>
+<script src="flashcards.js"></script>
+
+</body>
+</html>
+
+
