@@ -1428,43 +1428,10 @@
         <h3>Update Logs</h3>
         <p class="muted-subtitle">View recent updates and improvements to the Academic Learning Resources Administration System (ALRAS).</p>
       </div>
+      <button onclick="loadUpdateLogs(true)">Refresh Logs</button>
     </div>
 
-    <div class="update-logs-container">
-      <div class="log-entry">
-        <div class="log-date"><strong>[2026/04/21] 0100 GMT+8</strong></div>
-        <div class="log-item">
-          <span class="log-badge">[+]</span>
-          <span>[EN] Added Generic Vocabulary Challenge</span>
-        </div>
-        <div class="log-item">
-          <span class="log-badge">[+]</span>
-          <span>[HIST] Reformatted Japan History Notes</span>
-        </div>
-      <div class="log-entry">
-        <div class="log-date"><strong>[2026/04/20] 0400 GMT+8</strong></div>
-        <div class="log-item">
-          <span class="log-badge">[+]</span>
-          <span>[EN] Wordle feature for vocabulary with five characters</span>
-        </div>
-        <div class="log-item">
-          <span class="log-badge">[+]</span>
-          <span>[EN] Updated UI from flashcards</span>
-        </div>
-        <div class="log-item">
-          <span class="log-badge">[+]</span>
-          <span>[EN] Revamped flashcards flipping animation</span>
-        </div>
-        <div class="log-item">
-          <span class="log-badge">[+]</span>
-          <span>[ADMIN] Added HIST, GEOG, CHEM ALRAS UI</span>
-        </div>
-                <div class="log-item">
-          <span class="log-badge">[+]</span>
-          <span>[HIST] Added Cold War, Hong Kong, Japan History Notes</span>
-        </div>
-      </div>
-    </div>
+    <div class="update-logs-container" id="update-logs-container"></div>
   </section>
 
   <section class="app-screen" id="wordle-app">
@@ -1515,6 +1482,5 @@
 
 </body>
 </html>
-
 
 

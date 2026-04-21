@@ -263,6 +263,11 @@ main {
   font-weight: 700;
 }
 
+.update-logs-container {
+  display: grid;
+  gap: 14px;
+}
+
 .set-challenge-input,
 .wordle-input-area input {
   width: 100%;

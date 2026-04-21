@@ -63,6 +63,18 @@ const routeMap = {
   updates: openUpdateLogs
 };
 
+const updateLogsConfig = {
+  owner: 'darrenintr',
+  repo: 'JasonSoNoob',
+  perPage: 30,
+  timezone: 'Asia/Hong_Kong'
+};
+
+const updateLogsState = {
+  isLoaded: false,
+  isLoading: false
+};
+
 function setRoute(route) {
   if (!route) return;
   if (window.location.hash !== `#${route}`) {
@@ -482,11 +494,140 @@ function openFlashcards() {
   renderCard();
 }
 
+function formatUpdateDate(value) {
+  const date = new Date(value);
+  return date.toLocaleDateString('en-CA', {
+    timeZone: updateLogsConfig.timezone
+  }).replace(/-/g, '/');
+}
+
+function formatUpdateTime(value) {
+  const date = new Date(value);
+  return `${date.toLocaleTimeString('en-GB', {
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: false,
+    timeZone: updateLogsConfig.timezone
+  }).replace(':', '')} GMT+8`;
+}
+
+function renderUpdateStatus(container, badge, message) {
+  container.innerHTML = '';
+  const entry = document.createElement('div');
+  entry.className = 'log-entry';
+  const item = document.createElement('div');
+  item.className = 'log-item';
+  const badgeEl = document.createElement('span');
+  badgeEl.className = 'log-badge';
+  badgeEl.textContent = badge;
+  const messageEl = document.createElement('span');
+  messageEl.textContent = message;
+  item.appendChild(badgeEl);
+  item.appendChild(messageEl);
+  entry.appendChild(item);
+  container.appendChild(entry);
+}
+
+function renderUpdateLogs(commits) {
+  const container = document.getElementById('update-logs-container');
+  if (!container) return;
+  container.innerHTML = '';
+
+  if (!Array.isArray(commits) || commits.length === 0) {
+    renderUpdateStatus(container, '[!]', 'No commit logs available.');
+    return;
+  }
+
+  const groupedCommits = new Map();
+  commits.forEach((commit) => {
+    const commitDate = commit?.commit?.author?.date;
+    if (!commitDate) return;
+    const dateKey = formatUpdateDate(commitDate);
+    if (!groupedCommits.has(dateKey)) {
+      groupedCommits.set(dateKey, []);
+    }
+    groupedCommits.get(dateKey).push(commit);
+  });
+
+  groupedCommits.forEach((dailyCommits, dateKey) => {
+    const entry = document.createElement('div');
+    entry.className = 'log-entry';
+
+    const dateRow = document.createElement('div');
+    dateRow.className = 'log-date';
+    const dateText = document.createElement('strong');
+    const firstCommitTime = dailyCommits[0]?.commit?.author?.date;
+    dateText.textContent = `[${dateKey}] ${formatUpdateTime(firstCommitTime)}`;
+    dateRow.appendChild(dateText);
+    entry.appendChild(dateRow);
+
+    dailyCommits.forEach((commit) => {
+      const item = document.createElement('div');
+      item.className = 'log-item';
+
+      const badge = document.createElement('span');
+      badge.className = 'log-badge';
+      badge.textContent = '[+]';
+
+      const summary = document.createElement('span');
+      const commitMessage = (commit?.commit?.message || '').split('\n')[0].trim();
+      const commitSha = (commit?.sha || '').slice(0, 7);
+      const commitAuthor = commit?.author?.login || commit?.commit?.author?.name || 'unknown';
+      summary.textContent = `${commitSha} - ${commitMessage || '(no commit message)'} (${commitAuthor})`;
+
+      item.appendChild(badge);
+      item.appendChild(summary);
+      entry.appendChild(item);
+    });
+
+    container.appendChild(entry);
+  });
+}
+
+async function loadUpdateLogs(forceRefresh = false) {
+  const container = document.getElementById('update-logs-container');
+  if (!container) return;
+  if (updateLogsState.isLoading) return;
+  if (updateLogsState.isLoaded && !forceRefresh) return;
+
+  updateLogsState.isLoading = true;
+  renderUpdateStatus(container, '[..]', 'Loading update logs from GitHub commits...');
+
+  try {
+    const response = await fetch(
+      `https://api.github.com/repos/${updateLogsConfig.owner}/${updateLogsConfig.repo}/commits?per_page=${updateLogsConfig.perPage}`,
+      {
+        headers: {
+          Accept: 'application/vnd.github+json'
+        }
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error(`Request failed (${response.status})`);
+    }
+
+    const commits = await response.json();
+    renderUpdateLogs(commits);
+    updateLogsState.isLoaded = true;
+  } catch (error) {
+    renderUpdateStatus(
+      container,
+      '[!]',
+      `Unable to load commit logs. ${error?.message || 'Please try again later.'}`
+    );
+    updateLogsState.isLoaded = false;
+  } finally {
+    updateLogsState.isLoading = false;
+  }
+}
+
 function openUpdateLogs() {
   openScreen('update-logs-app', { route: 'updates' });
   document.querySelector('header .brand h1').textContent = 'HPCCSS 5B ALRAS Update Logs';
   document.querySelectorAll('.alras-item').forEach((btn) => btn.classList.remove('active'));
   document.getElementById('sidebar-update-logs').classList.add('active');
+  loadUpdateLogs();
 }
 
 window.addEventListener('load', () => {
