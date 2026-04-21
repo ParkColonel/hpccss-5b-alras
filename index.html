@@ -16,6 +16,13 @@
     <h1>HPCCSS 5B English ALRAS</h1>
     <p>Academic Learning Resources Administration System</p>
   </div>
+  <div class="brand-mark" aria-hidden="true">
+    <svg class="brand-svg" viewBox="0 0 120 120" role="presentation">
+      <path class="brand-svg-stroke" d="M18 22h84v84H18z"></path>
+      <path class="brand-svg-stroke" d="M36 40h48v40H36z"></path>
+      <path class="brand-svg-stroke" d="M24 96h72"></path>
+    </svg>
+  </div>
 </header>
 
 <main>
@@ -42,6 +49,13 @@
         </div>
 
         <div class="hero-panel">
+      <div class="hero-ascii" id="hero-ascii-panel" aria-hidden="true">
+        <pre class="hero-ascii-art" aria-hidden="true">+--------------------+
+|      A L R A S     |
+|   LEARNING GRID    |
++--------------------+</pre>
+        <div class="hero-ascii-status">SYSTEM <span id="ascii-loader">BOOTING</span></div>
+      </div>
       <div class="feature-list" id="features">
         <div class="feature-card" id="primary-feature-card" onclick="openFlashcards()">
           <span>1</span>
@@ -1445,6 +1459,9 @@
 
     <div class="wordle-container">
       <div class="wordle-status" id="wordle-status"></div>
+      <div class="wordle-progress" role="progressbar" aria-valuemin="0" aria-valuemax="6" aria-valuenow="6">
+        <span class="wordle-progress-fill" id="wordle-progress-fill"></span>
+      </div>
       
       <div class="wordle-display">
         <div class="word-display" id="word-display"></div>
@@ -1482,5 +1499,3 @@
 
 </body>
 </html>
-
-

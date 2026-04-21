@@ -75,6 +75,19 @@ const updateLogsState = {
   isLoading: false
 };
 
+const asciiFrames = [
+  'BOOTING',
+  'BOOTING.',
+  'BOOTING..',
+  'BOOTING...',
+  'RUNNING'
+];
+
+const asciiState = {
+  index: 0,
+  timer: null
+};
+
 function setRoute(route) {
   if (!route) return;
   if (window.location.hash !== `#${route}`) {
@@ -88,6 +101,54 @@ function animateJump(elementId) {
   el.classList.remove('jump-in');
   void el.offsetWidth;
   el.classList.add('jump-in');
+}
+
+function restartFeatureCardEntrance() {
+  const cards = document.querySelectorAll('.feature-card');
+  cards.forEach((card) => {
+    card.style.animation = 'none';
+    void card.offsetWidth;
+    card.style.animation = '';
+  });
+}
+
+function getAsciiLoaderElement() {
+  return document.getElementById('ascii-loader');
+}
+
+function updateAsciiFrame() {
+  const loader = getAsciiLoaderElement();
+  if (!loader) return;
+  loader.textContent = asciiFrames[asciiState.index];
+  asciiState.index = (asciiState.index + 1) % asciiFrames.length;
+}
+
+function shouldRunAsciiTicker() {
+  const hero = document.querySelector('.hero');
+  if (!hero) return false;
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return false;
+  const heroVisible = window.getComputedStyle(hero).display !== 'none';
+  return heroVisible && !document.hidden;
+}
+
+function startAsciiTicker() {
+  if (asciiState.timer) return;
+  updateAsciiFrame();
+  asciiState.timer = window.setInterval(updateAsciiFrame, 650);
+}
+
+function stopAsciiTicker() {
+  if (!asciiState.timer) return;
+  clearInterval(asciiState.timer);
+  asciiState.timer = null;
+}
+
+function syncAsciiTicker() {
+  if (shouldRunAsciiTicker()) {
+    startAsciiTicker();
+  } else {
+    stopAsciiTicker();
+  }
 }
 
 function hideAllScreens() {
@@ -113,6 +174,7 @@ function openScreen(screenId, {
     screen.scrollIntoView({ behavior: 'smooth' });
   }
   setRoute(route);
+  syncAsciiTicker();
 }
 
 function openRouteFromHash() {
@@ -382,6 +444,15 @@ function updateWordleDisplay() {
 
   // Update attempts
   document.getElementById('attempts-text').textContent = `Attempts remaining: ${wordleState.attempts}`;
+  const progressFill = document.getElementById('wordle-progress-fill');
+  const progressTrack = document.querySelector('.wordle-progress');
+  if (progressFill) {
+    const percentage = (wordleState.attempts / 6) * 100;
+    progressFill.style.width = `${percentage}%`;
+  }
+  if (progressTrack) {
+    progressTrack.setAttribute('aria-valuenow', String(wordleState.attempts));
+  }
 
   // Update status
   let statusText = '';
@@ -483,8 +554,10 @@ function showLanding() {
   document.querySelector('.hero').style.display = 'grid';
   const settings = alrasSettings[currentAlras] || alrasSettings['EN ALRAS'];
   document.querySelector('header .brand h1').textContent = `HPCCSS 5B ${settings.headerName} ALRAS`;
+  restartFeatureCardEntrance();
   animateJump('primary-feature-card');
   setRoute('home');
+  syncAsciiTicker();
 }
 
 function openFlashcards() {
@@ -637,6 +710,8 @@ window.addEventListener('load', () => {
   if (typeof cards !== 'undefined' && cards.length === 0) {
     document.getElementById('loading').innerText = 'No data found.';
   }
+  syncAsciiTicker();
 });
 
 window.addEventListener('hashchange', openRouteFromHash);
+document.addEventListener('visibilitychange', syncAsciiTicker);

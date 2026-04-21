@@ -11,6 +11,11 @@ header {
   z-index: 20;
 }
 
+.brand {
+  display: flex;
+  flex-direction: column;
+}
+
 .brand h1 {
   margin: 0;
   font-size: 1.25rem;
@@ -25,6 +30,34 @@ header {
   color: var(--muted);
   font-size: 0.82rem;
   font-weight: 600;
+}
+
+.brand-mark {
+  width: 58px;
+  height: 58px;
+  border: 2px solid var(--border);
+  background: #fff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.brand-svg {
+  width: 44px;
+  height: 44px;
+  transition:
+    transform var(--dur-fast) var(--ease-linear),
+    filter var(--dur-fast) var(--ease-linear);
+}
+
+.brand-svg-stroke {
+  fill: none;
+  stroke: var(--border);
+  stroke-width: 4;
+  stroke-linecap: square;
+  stroke-dasharray: 240;
+  stroke-dashoffset: 240;
+  animation: brandDraw 700ms var(--ease-linear) forwards;
 }
 
 main {
@@ -109,6 +142,37 @@ main {
   background: var(--surface);
 }
 
+.hero-ascii {
+  border: 2px solid var(--border);
+  background: #fff;
+  padding: 10px;
+  margin-bottom: 10px;
+}
+
+.hero-ascii-art {
+  margin: 0;
+  font-size: 0.74rem;
+  font-family: "Courier New", Courier, monospace;
+  font-weight: 700;
+  line-height: 1.25;
+  white-space: pre;
+}
+
+.hero-ascii-status {
+  margin-top: 8px;
+  border-top: 2px solid var(--border);
+  padding-top: 6px;
+  font-family: "Courier New", Courier, monospace;
+  font-weight: 700;
+  font-size: 0.8rem;
+  letter-spacing: 0.04em;
+}
+
+#ascii-loader {
+  display: inline-block;
+  min-width: 110px;
+}
+
 .feature-list {
   display: grid;
   gap: 10px;
@@ -122,10 +186,29 @@ main {
   grid-template-columns: 40px 1fr;
   gap: 10px;
   cursor: pointer;
+  opacity: 0;
+  transform: translateY(12px);
+  animation: featureLinearReveal var(--dur-slow) var(--ease-linear) forwards;
+  transition:
+    transform var(--dur-base) var(--ease-snap),
+    box-shadow var(--dur-fast) var(--ease-linear),
+    background-color var(--dur-fast) var(--ease-linear);
 }
 
-.feature-card:hover {
-  background: #fff;
+.feature-card:nth-child(1) {
+  animation-delay: 40ms;
+}
+
+.feature-card:nth-child(2) {
+  animation-delay: 100ms;
+}
+
+.feature-card:nth-child(3) {
+  animation-delay: 160ms;
+}
+
+.feature-card:nth-child(4) {
+  animation-delay: 220ms;
 }
 
 .feature-card span {
@@ -162,21 +245,17 @@ main {
 }
 
 .jump-in {
-  animation: jumpIn 320ms ease-out;
+  animation: jumpIn var(--dur-slow) var(--ease-linear);
 }
 
 @keyframes jumpIn {
   0% {
     opacity: 0;
-    transform: translateY(18px) scale(0.98);
-  }
-  65% {
-    opacity: 1;
-    transform: translateY(-6px) scale(1.01);
+    transform: translateY(12px);
   }
   100% {
     opacity: 1;
-    transform: translateY(0) scale(1);
+    transform: translateY(0);
   }
 }
 
@@ -206,12 +285,35 @@ main {
 #set-challenge-submit,
 #set-challenge-newset {
   border: 2px solid var(--border);
-  background: var(--primary);
+  background: #fff;
   color: #111;
   padding: 10px 16px;
   border-radius: 0;
   font-weight: 700;
   cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  transition:
+    color var(--dur-fast) var(--ease-linear),
+    transform var(--dur-fast) var(--ease-linear),
+    box-shadow var(--dur-fast) var(--ease-linear);
+}
+
+.app-header button::before,
+.controls button::before,
+.wordle-input-area button::before,
+.wordle-new-game::before,
+#set-challenge-submit::before,
+#set-challenge-newset::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--primary);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform var(--dur-base) var(--ease-linear);
+  z-index: -1;
 }
 
 .controls {
@@ -306,6 +408,27 @@ main {
   padding: 10px;
   border: 2px solid var(--border);
   background: #fff;
+  transition:
+    transform var(--dur-fast) var(--ease-snap),
+    box-shadow var(--dur-fast) var(--ease-linear);
+}
+
+.log-item span:last-child {
+  position: relative;
+  display: inline-block;
+}
+
+.log-item span:last-child::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -2px;
+  width: 100%;
+  height: 2px;
+  background: var(--border);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform var(--dur-base) var(--ease-linear);
 }
 
 .log-badge {
@@ -318,6 +441,23 @@ main {
   font-size: 1.05rem;
   font-weight: 800;
   min-height: 26px;
+}
+
+.wordle-progress {
+  width: 100%;
+  height: 12px;
+  margin: 8px 0 4px;
+  border: 2px solid var(--border);
+  background: #fff;
+  overflow: hidden;
+}
+
+.wordle-progress-fill {
+  display: block;
+  height: 100%;
+  width: 100%;
+  background: var(--primary);
+  transition: width var(--dur-slow) var(--ease-linear);
 }
 
 .status-win {
@@ -412,6 +552,64 @@ main {
   background: #fff;
 }
 
+@keyframes featureLinearReveal {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes brandDraw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .feature-card:hover {
+    background: #fff;
+    transform: translateY(-2px);
+    box-shadow: 3px 3px 0 var(--border);
+  }
+
+  .brand-mark:hover .brand-svg {
+    transform: translateY(-1px);
+    filter: drop-shadow(1px 1px 0 var(--primary));
+  }
+
+  .app-header button:hover::before,
+  .controls button:hover::before,
+  .wordle-input-area button:hover::before,
+  .wordle-new-game:hover::before,
+  #set-challenge-submit:hover::before,
+  #set-challenge-newset:hover::before {
+    transform: scaleX(1);
+  }
+
+  .app-header button:hover,
+  .controls button:hover,
+  .wordle-input-area button:hover,
+  .wordle-new-game:hover,
+  #set-challenge-submit:hover,
+  #set-challenge-newset:hover {
+    transform: translateY(-1px);
+    box-shadow: 2px 2px 0 var(--border);
+  }
+
+  .log-item:hover {
+    transform: translateX(3px);
+    box-shadow: 2px 2px 0 var(--border);
+  }
+
+  .log-item:hover span:last-child::after {
+    transform: scaleX(1);
+  }
+}
+
 @media (max-width: 980px) {
   .page-grid {
     grid-template-columns: 1fr;
@@ -432,6 +630,16 @@ main {
     flex-direction: column;
     align-items: flex-start;
     gap: 10px;
+  }
+
+  .brand-mark {
+    width: 48px;
+    height: 48px;
+  }
+
+  .brand-svg {
+    width: 36px;
+    height: 36px;
   }
 
   .hero-copy,
