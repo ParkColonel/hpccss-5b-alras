@@ -161,6 +161,25 @@ main {
   margin-top: 12px;
 }
 
+.jump-in {
+  animation: jumpIn 320ms ease-out;
+}
+
+@keyframes jumpIn {
+  0% {
+    opacity: 0;
+    transform: translateY(18px) scale(0.98);
+  }
+  65% {
+    opacity: 1;
+    transform: translateY(-6px) scale(1.01);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
 .app-header {
   display: flex;
   align-items: center;
