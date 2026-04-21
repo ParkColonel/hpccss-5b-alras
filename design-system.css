@@ -1,0 +1,27 @@
+:root {
+  --bg: #08101f;
+  --surface: rgba(18, 28, 46, 0.95);
+  --surface-soft: rgba(28, 41, 67, 0.92);
+  --primary: #7c9cff;
+  --accent: #52e5ff;
+  --text: #e9f2ff;
+  --muted: #9bb4d6;
+  --border: rgba(112, 143, 194, 0.2);
+  --shadow: 0 24px 60px rgba(0, 0, 0, 0.25);
+  --font: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: var(--font);
+  color: var(--text);
+  background:
+    radial-gradient(circle at top left, rgba(124, 156, 255, 0.18), transparent 25%),
+    radial-gradient(circle at bottom right, rgba(82, 229, 255, 0.12), transparent 25%),
+    linear-gradient(180deg, #040811 0%, #08101f 100%);
+}
