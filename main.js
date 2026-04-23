@@ -586,22 +586,29 @@ function submitGuess() {
     letterCounts[char] = (letterCounts[char] || 0) + 1;
   }
 
-  // Evaluate the guess
-  let guessArray = [];
-  for (let i = 0; i < input.length; i++) {
-    const letter = input[i];
-    let state = 'absent';
+  // Evaluate in two passes so repeated letters don't over-claim "present" before exact matches are handled.
+  const result = Array(input.length).fill('absent');
 
-    if (letter === wordleState.currentWord[i]) {
-      state = 'correct';
-      letterCounts[letter]--;
-    } else if (wordleState.currentWord.includes(letter) && letterCounts[letter] > 0) {
-      state = 'present';
+  for (let i = 0; i < input.length; i++) {
+    if (input[i] === wordleState.currentWord[i]) {
+      result[i] = 'correct';
+      letterCounts[input[i]]--;
+    }
+  }
+
+  for (let i = 0; i < input.length; i++) {
+    if (result[i] === 'correct') continue;
+    const letter = input[i];
+    if (wordleState.currentWord.includes(letter) && letterCounts[letter] > 0) {
+      result[i] = 'present';
       letterCounts[letter]--;
     }
-
-    guessArray.push({ letter, state });
   }
+
+  const guessArray = input.split('').map((letter, index) => ({
+    letter,
+    state: result[index]
+  }));
 
   wordleState.guesses.push(guessArray);
   wordleState.attempts--;
