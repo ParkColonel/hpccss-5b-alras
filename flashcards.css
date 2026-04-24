@@ -18,6 +18,7 @@
   box-shadow: var(--shadow);
   background: #fff;
   transform-style: preserve-3d;
+  -webkit-transform-style: preserve-3d;
   transition: transform calc(var(--dur-slow) + 480ms) var(--ease-snap), box-shadow var(--dur-fast) var(--ease-linear);
 }
 
@@ -49,6 +50,7 @@
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
   will-change: transform;
+  transform: rotateY(0deg);
 }
 
 .card-front {
@@ -58,10 +60,11 @@
 .card-back {
   background: #fff;
   transform: rotateY(180deg);
+  z-index: 2;
 }
 
 .flashcard.flipped .card-inner {
-  transform: rotateY(180deg) rotateX(9deg);
+  transform: rotateY(180deg);
 }
 
 .flashcard.flipped .card-inner::after {
