@@ -91,7 +91,8 @@ if (canvas && wrapper) {
   scene.add(rimLight);
 
   let rafId = 0;
-  let running = true;
+  let running = false;
+  let hasSignaledReady = false;
 
   function resize() {
     const rect = wrapper.getBoundingClientRect();
@@ -126,6 +127,10 @@ if (canvas && wrapper) {
     camera.lookAt(0, 0, 0);
 
     renderer.render(scene, camera);
+    if (!hasSignaledReady) {
+      hasSignaledReady = true;
+      window.dispatchEvent(new CustomEvent('hero3d:ready'));
+    }
 
     if (running) {
       rafId = window.requestAnimationFrame(render);
