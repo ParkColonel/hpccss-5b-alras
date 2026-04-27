@@ -49,12 +49,16 @@
         </div>
 
         <div class="hero-panel">
-      <div class="hero-ascii" id="hero-ascii-panel" aria-hidden="true">
-        <pre class="hero-ascii-art" aria-hidden="true">+--------------------+
+      <div class="hero-three-wrap" id="hero-three-wrap" aria-hidden="true">
+        <canvas id="hero-three-canvas"></canvas>
+        <div class="hero-three-glow"></div>
+        <div class="hero-ascii hero-ascii-overlay" id="hero-ascii-panel" aria-hidden="true">
+          <pre class="hero-ascii-art" aria-hidden="true">+--------------------+
 |      A L R A S     |
 |   LEARNING GRID    |
 +--------------------+</pre>
-        <div class="hero-ascii-status">SYSTEM <span id="ascii-loader">BOOTING</span></div>
+          <div class="hero-ascii-status">SYSTEM <span id="ascii-loader">BOOTING</span></div>
+        </div>
       </div>
       <div class="feature-list" id="features">
         <div class="feature-card" id="primary-feature-card" onclick="openFlashcards()">
@@ -1494,8 +1498,11 @@
   </div>
 </main>
 
+<button id="physics-toggle-btn" class="physics-toggle-btn" onclick="togglePhysicsMode()">Physics Mode</button>
+
 <script src="main.js"></script>
 <script src="flashcards.js"></script>
 
+  <script type="module" src="three-hero.js"></script>
 </body>
 </html>
