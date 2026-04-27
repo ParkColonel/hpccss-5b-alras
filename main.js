@@ -88,6 +88,10 @@ const asciiState = {
   timer: null
 };
 
+const hero3dState = {
+  isReady: false
+};
+
 const sectionTransitionState = {
   timer: null
 };
@@ -137,6 +141,21 @@ function restartFeatureCardEntrance() {
 
 function getAsciiLoaderElement() {
   return document.getElementById('ascii-loader');
+}
+
+function markHero3dReady() {
+  if (hero3dState.isReady) return;
+  hero3dState.isReady = true;
+  const wrap = document.getElementById('hero-three-wrap');
+  const loader = getAsciiLoaderElement();
+  if (loader) {
+    loader.textContent = '3D READY';
+  }
+  if (wrap) {
+    window.setTimeout(() => {
+      wrap.classList.add('is-ready');
+    }, 250);
+  }
 }
 
 function updateAsciiFrame() {
@@ -829,3 +848,4 @@ window.addEventListener('load', () => {
 
 window.addEventListener('hashchange', openRouteFromHash);
 document.addEventListener('visibilitychange', syncAsciiTicker);
+window.addEventListener('hero3d:ready', markHero3dReady);
