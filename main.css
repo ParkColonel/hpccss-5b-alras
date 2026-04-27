@@ -421,6 +421,26 @@ main {
   font-weight: 800;
 }
 
+.geog-table table {
+  width: 100%;
+  border-collapse: collapse;
+  color: var(--text);
+}
+
+.geog-table th,
+.geog-table td {
+  padding: 12px;
+  border: 2px solid var(--border);
+  text-align: left;
+  background: #fff;
+}
+
+.geog-table thead th {
+  background: var(--primary);
+  color: #111;
+  font-weight: 800;
+}
+
 .cold-war-frame iframe {
   width: 100%;
   min-height: 720px;
