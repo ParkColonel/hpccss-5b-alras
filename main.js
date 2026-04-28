@@ -92,6 +92,19 @@ const hero3dState = {
   isReady: false
 };
 
+const physicsState = {
+  active: false,
+  loading: false,
+  engine: null,
+  runner: null,
+  mouseConstraint: null,
+  boundaries: [],
+  bodyMap: [],
+  beforeStyles: new Map(),
+  syncHandler: null,
+  matter: null
+};
+
 const sectionTransitionState = {
   timer: null
 };
@@ -155,6 +168,215 @@ function markHero3dReady() {
     window.setTimeout(() => {
       wrap.classList.add('is-ready');
     }, 250);
+  }
+}
+
+function loadMatterJs() {
+  if (window.Matter) {
+    return Promise.resolve(window.Matter);
+  }
+  return new Promise((resolve, reject) => {
+    const existing = document.querySelector('script[data-matter-js="true"]');
+    if (existing) {
+      existing.addEventListener('load', () => resolve(window.Matter), { once: true });
+      existing.addEventListener('error', () => reject(new Error('Failed to load Matter.js')), { once: true });
+      return;
+    }
+    const script = document.createElement('script');
+    script.src = 'https://cdn.jsdelivr.net/npm/matter-js@0.20.0/build/matter.min.js';
+    script.async = true;
+    script.dataset.matterJs = 'true';
+    script.onload = () => resolve(window.Matter);
+    script.onerror = () => reject(new Error('Failed to load Matter.js'));
+    document.head.appendChild(script);
+  });
+}
+
+function getPhysicsTargets() {
+  const targetSelectors = [
+    'header .brand-mark',
+    '.alras-item',
+    '.feature-card:not(.hidden)',
+    '.hero-copy',
+    '.hero-three-wrap',
+    '.app-header',
+    '.flashcard',
+    '.controls button',
+    '.history-table',
+    '.wordle-input-group',
+    '.set-challenge-card'
+  ];
+  const all = Array.from(document.querySelectorAll(targetSelectors.join(',')));
+  const toggle = document.getElementById('physics-toggle-btn');
+  return all.filter((el) => {
+    if (el === toggle) return false;
+    if (window.getComputedStyle(el).display === 'none') return false;
+    const rect = el.getBoundingClientRect();
+    return rect.width > 30 && rect.height > 30;
+  });
+}
+
+function createWorldBounds(Matter) {
+  const { Bodies, World } = Matter;
+  const thickness = 120;
+  const width = window.innerWidth;
+  const height = window.innerHeight;
+  const bounds = [
+    Bodies.rectangle(width / 2, -thickness / 2, width, thickness, { isStatic: true }),
+    Bodies.rectangle(width / 2, height + thickness / 2, width, thickness, { isStatic: true }),
+    Bodies.rectangle(-thickness / 2, height / 2, thickness, height, { isStatic: true }),
+    Bodies.rectangle(width + thickness / 2, height / 2, thickness, height, { isStatic: true })
+  ];
+  World.add(physicsState.engine.world, bounds);
+  physicsState.boundaries = bounds;
+}
+
+function activatePhysicsMode(Matter) {
+  const { Engine, Runner, Bodies, Body, World, Events, Mouse, MouseConstraint } = Matter;
+  const toggleBtn = document.getElementById('physics-toggle-btn');
+  if (!toggleBtn) return;
+
+  physicsState.engine = Engine.create();
+  physicsState.engine.gravity.y = 0.9;
+  physicsState.runner = Runner.create();
+  physicsState.bodyMap = [];
+  physicsState.beforeStyles = new Map();
+
+  createWorldBounds(Matter);
+
+  const targets = getPhysicsTargets();
+  targets.forEach((el) => {
+    const rect = el.getBoundingClientRect();
+    const centerX = rect.left + rect.width / 2;
+    const centerY = rect.top + rect.height / 2;
+
+    physicsState.beforeStyles.set(el, {
+      left: el.style.left,
+      top: el.style.top,
+      width: el.style.width,
+      height: el.style.height,
+      position: el.style.position,
+      zIndex: el.style.zIndex,
+      transform: el.style.transform
+    });
+
+    el.classList.add('physics-floating');
+    el.style.left = `${centerX}px`;
+    el.style.top = `${centerY}px`;
+    el.style.width = `${rect.width}px`;
+    el.style.height = `${rect.height}px`;
+
+    const body = Bodies.rectangle(centerX, centerY, rect.width, rect.height, {
+      restitution: 0.55,
+      friction: 0.015,
+      frictionAir: 0.012,
+      density: 0.0016
+    });
+    Body.setVelocity(body, {
+      x: (Math.random() - 0.5) * 8,
+      y: -Math.random() * 6
+    });
+    physicsState.bodyMap.push({ el, body });
+  });
+
+  World.add(physicsState.engine.world, physicsState.bodyMap.map(({ body }) => body));
+
+  const mouse = Mouse.create(document.body);
+  physicsState.mouseConstraint = MouseConstraint.create(physicsState.engine, {
+    mouse,
+    constraint: {
+      stiffness: 0.2,
+      damping: 0.15,
+      render: { visible: false }
+    }
+  });
+  World.add(physicsState.engine.world, physicsState.mouseConstraint);
+
+  physicsState.syncHandler = () => {
+    physicsState.bodyMap.forEach(({ el, body }) => {
+      el.style.left = `${body.position.x}px`;
+      el.style.top = `${body.position.y}px`;
+      el.style.transform = `translate(-50%, -50%) rotate(${body.angle}rad)`;
+    });
+  };
+
+  Events.on(physicsState.engine, 'afterUpdate', physicsState.syncHandler);
+  Runner.run(physicsState.runner, physicsState.engine);
+
+  physicsState.active = true;
+  toggleBtn.classList.add('active');
+  toggleBtn.textContent = 'Physics Off';
+}
+
+function deactivatePhysicsMode() {
+  const Matter = physicsState.matter || window.Matter;
+  const toggleBtn = document.getElementById('physics-toggle-btn');
+  if (!Matter || !physicsState.engine) return;
+  const { Events, World, Runner, Engine } = Matter;
+
+  if (physicsState.syncHandler) {
+    Events.off(physicsState.engine, 'afterUpdate', physicsState.syncHandler);
+  }
+  if (physicsState.mouseConstraint) {
+    World.remove(physicsState.engine.world, physicsState.mouseConstraint);
+  }
+  if (physicsState.boundaries.length) {
+    World.remove(physicsState.engine.world, physicsState.boundaries);
+  }
+  if (physicsState.bodyMap.length) {
+    World.remove(physicsState.engine.world, physicsState.bodyMap.map(({ body }) => body));
+  }
+
+  Runner.stop(physicsState.runner);
+  Engine.clear(physicsState.engine);
+
+  physicsState.bodyMap.forEach(({ el }) => {
+    const before = physicsState.beforeStyles.get(el);
+    el.classList.remove('physics-floating');
+    el.style.left = before?.left || '';
+    el.style.top = before?.top || '';
+    el.style.width = before?.width || '';
+    el.style.height = before?.height || '';
+    el.style.position = before?.position || '';
+    el.style.zIndex = before?.zIndex || '';
+    el.style.transform = before?.transform || '';
+  });
+
+  physicsState.active = false;
+  physicsState.engine = null;
+  physicsState.runner = null;
+  physicsState.mouseConstraint = null;
+  physicsState.boundaries = [];
+  physicsState.bodyMap = [];
+  physicsState.beforeStyles = new Map();
+  physicsState.syncHandler = null;
+
+  if (toggleBtn) {
+    toggleBtn.classList.remove('active');
+    toggleBtn.textContent = 'Physics Mode';
+  }
+}
+
+async function togglePhysicsMode() {
+  const toggleBtn = document.getElementById('physics-toggle-btn');
+  if (!toggleBtn || physicsState.loading) return;
+
+  if (physicsState.active) {
+    deactivatePhysicsMode();
+    return;
+  }
+
+  physicsState.loading = true;
+  toggleBtn.textContent = 'Loading Physics...';
+  try {
+    const Matter = await loadMatterJs();
+    physicsState.matter = Matter;
+    activatePhysicsMode(Matter);
+  } catch (error) {
+    toggleBtn.textContent = 'Physics Mode';
+    window.alert('Unable to load physics engine right now. Please try again.');
+  } finally {
+    physicsState.loading = false;
   }
 }
 

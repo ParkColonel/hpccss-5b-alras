@@ -259,6 +259,35 @@ main {
     background-color var(--dur-fast) var(--ease-linear);
 }
 
+.physics-toggle-btn {
+  position: fixed;
+  right: 18px;
+  bottom: 18px;
+  z-index: 1200;
+  border: 2px solid var(--border);
+  background: var(--primary);
+  color: var(--text);
+  font-weight: 800;
+  padding: 10px 14px;
+  box-shadow: var(--shadow);
+  cursor: pointer;
+}
+
+.physics-toggle-btn.active {
+  background: #111;
+  color: var(--primary);
+}
+
+.physics-floating {
+  position: fixed !important;
+  margin: 0 !important;
+  transform: translate(-50%, -50%);
+  transform-origin: center center;
+  z-index: 1100 !important;
+  will-change: transform;
+  pointer-events: auto !important;
+}
+
 .feature-card:nth-child(1) {
   animation-delay: 40ms;
 }
