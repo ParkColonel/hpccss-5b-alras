@@ -5,7 +5,8 @@
  <meta charset="UTF-8">
  <meta name="viewport" content="width=device-width, initial-scale=1.0">
  <title>HPCCSS 5B English Self-learning Platform</title>
- <link rel="stylesheet" href="main.css">
+ <link rel="stylesheet" href="design-system.css">
+<link rel="stylesheet" href="main.css">
 <link rel="stylesheet" href="flashcards.css">
 </head>
 <body>
@@ -14,6 +15,13 @@
   <div class="brand">
     <h1>HPCCSS 5B English ALRAS</h1>
     <p>Academic Learning Resources Administration System</p>
+  </div>
+  <div class="brand-mark" aria-hidden="true">
+    <svg class="brand-svg" viewBox="0 0 120 120" role="presentation">
+      <path class="brand-svg-stroke" d="M18 22h84v84H18z"></path>
+      <path class="brand-svg-stroke" d="M36 40h48v40H36z"></path>
+      <path class="brand-svg-stroke" d="M24 96h72"></path>
+    </svg>
   </div>
 </header>
 
@@ -41,6 +49,17 @@
         </div>
 
         <div class="hero-panel">
+      <div class="hero-three-wrap" id="hero-three-wrap" aria-hidden="true">
+        <canvas id="hero-three-canvas"></canvas>
+        <div class="hero-three-glow"></div>
+        <div class="hero-ascii hero-ascii-overlay" id="hero-ascii-panel" aria-hidden="true">
+          <pre class="hero-ascii-art" aria-hidden="true">+--------------------+
+|      A L R A S     |
+|   LEARNING GRID    |
++--------------------+</pre>
+          <div class="hero-ascii-status">SYSTEM <span id="ascii-loader">BOOTING</span></div>
+        </div>
+      </div>
       <div class="feature-list" id="features">
         <div class="feature-card" id="primary-feature-card" onclick="openFlashcards()">
           <span>1</span>
@@ -1427,43 +1446,10 @@
         <h3>Update Logs</h3>
         <p class="muted-subtitle">View recent updates and improvements to the Academic Learning Resources Administration System (ALRAS).</p>
       </div>
+      <button onclick="loadUpdateLogs(true)">Refresh Logs</button>
     </div>
 
-    <div class="update-logs-container">
-      <div class="log-entry">
-        <div class="log-date"><strong>[2026/04/21] 0100 GMT+8</strong></div>
-        <div class="log-item">
-          <span class="log-badge">[+]</span>
-          <span>[EN] Added Generic Vocabulary Challenge</span>
-        </div>
-        <div class="log-item">
-          <span class="log-badge">[+]</span>
-          <span>[HIST] Reformatted Japan History Notes</span>
-        </div>
-      <div class="log-entry">
-        <div class="log-date"><strong>[2026/04/20] 0400 GMT+8</strong></div>
-        <div class="log-item">
-          <span class="log-badge">[+]</span>
-          <span>[EN] Wordle feature for vocabulary with five characters</span>
-        </div>
-        <div class="log-item">
-          <span class="log-badge">[+]</span>
-          <span>[EN] Updated UI from flashcards</span>
-        </div>
-        <div class="log-item">
-          <span class="log-badge">[+]</span>
-          <span>[EN] Revamped flashcards flipping animation</span>
-        </div>
-        <div class="log-item">
-          <span class="log-badge">[+]</span>
-          <span>[ADMIN] Added HIST, GEOG, CHEM ALRAS UI</span>
-        </div>
-                <div class="log-item">
-          <span class="log-badge">[+]</span>
-          <span>[HIST] Added Cold War, Hong Kong, Japan History Notes</span>
-        </div>
-      </div>
-    </div>
+    <div class="update-logs-container" id="update-logs-container"></div>
   </section>
 
   <section class="app-screen" id="wordle-app">
@@ -1477,6 +1463,9 @@
 
     <div class="wordle-container">
       <div class="wordle-status" id="wordle-status"></div>
+      <div class="wordle-progress" role="progressbar" aria-valuemin="0" aria-valuemax="6" aria-valuenow="6">
+        <span class="wordle-progress-fill" id="wordle-progress-fill"></span>
+      </div>
       
       <div class="wordle-display">
         <div class="word-display" id="word-display"></div>
@@ -1509,11 +1498,11 @@
   </div>
 </main>
 
+<button id="physics-toggle-btn" class="physics-toggle-btn" onclick="togglePhysicsMode()">Physics Mode</button>
+
 <script src="main.js"></script>
 <script src="flashcards.js"></script>
 
+  <script type="module" src="three-hero.js"></script>
 </body>
 </html>
-
-
-

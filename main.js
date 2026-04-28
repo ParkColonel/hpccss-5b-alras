@@ -30,25 +30,498 @@ const alrasSettings = {
   'GEOG ALRAS': {
     headerName: 'Geography',
     sectionName: 'Geography',
-    description: `Available Features: <br>- Generic Vocabulary Flashcards <br>- Wordle`
+    description: `Status: <br>- Geography section is coming soon. <br>- Please check back for upcoming materials and activities.`
   },
   'CHEM ALRAS': {
     headerName: 'Chemistry',
     sectionName: 'Chemistry',
-    description: `Available Features: <br>- Generic Vocabulary Flashcards <br>- Wordle`
+    description: `Status: <br>- Chemistry section is coming soon. <br>- Please check back for upcoming materials and activities.`
   }
 };
 
 let currentAlras = 'EN ALRAS';
+const screenIds = [
+  'flashcard-app',
+  'history-table-app',
+  'cold-war-app',
+  'hk-history-app',
+  'jp-history-app',
+  'update-logs-app',
+  'set-challenge-app',
+  'wordle-app'
+];
+
+const routeMap = {
+  home: showLanding,
+  flashcards: openFlashcards,
+  abbreviations: openHistoryAbbreviations,
+  'cold-war': openColdWarNotes,
+  'hk-history': openHkHistoryNotes,
+  'jp-history': openJpHistoryNotes,
+  wordle: openWordle,
+  challenge: openSetChallenge,
+  updates: openUpdateLogs
+};
+
+const updateLogsConfig = {
+  owner: 'darrenintr',
+  repo: 'JasonSoNoob',
+  perPage: 30,
+  timezone: 'Asia/Hong_Kong'
+};
+
+const updateLogsState = {
+  isLoaded: false,
+  isLoading: false
+};
+
+const asciiFrames = [
+  'BOOTING',
+  'BOOTING.',
+  'BOOTING..',
+  'BOOTING...',
+  'RUNNING'
+];
+
+const asciiState = {
+  index: 0,
+  timer: null
+};
+
+const hero3dState = {
+  isReady: false
+};
+
+const physicsState = {
+  active: false,
+  loading: false,
+  engine: null,
+  runner: null,
+  mouseConstraint: null,
+  boundaries: [],
+  bodyMap: [],
+  beforeStyles: new Map(),
+  syncHandler: null,
+  matter: null
+};
+
+const sectionTransitionState = {
+  timer: null
+};
+
+const sectionTransitionMs = 460;
+
+function setRoute(route) {
+  if (!route) return;
+  if (window.location.hash !== `#${route}`) {
+    history.replaceState(null, '', `#${route}`);
+  }
+}
+
+function animateJump(elementId) {
+  const el = document.getElementById(elementId);
+  if (!el) return;
+  el.classList.remove('jump-in');
+  void el.offsetWidth;
+  el.classList.add('jump-in');
+}
+
+function animateTextFlip(el) {
+  if (!el) return;
+  el.classList.remove('text-flip');
+  void el.offsetWidth;
+  el.classList.add('text-flip');
+}
+
+function setTextWithFlip(el, value, useHtml = false) {
+  if (!el) return;
+  if (useHtml) {
+    el.innerHTML = value;
+  } else {
+    el.textContent = value;
+  }
+  animateTextFlip(el);
+}
+
+function restartFeatureCardEntrance() {
+  const cards = document.querySelectorAll('.feature-card');
+  cards.forEach((card) => {
+    card.style.animation = 'none';
+    void card.offsetWidth;
+    card.style.animation = '';
+  });
+}
+
+function getAsciiLoaderElement() {
+  return document.getElementById('ascii-loader');
+}
+
+function markHero3dReady() {
+  if (hero3dState.isReady) return;
+  hero3dState.isReady = true;
+  const wrap = document.getElementById('hero-three-wrap');
+  const loader = getAsciiLoaderElement();
+  if (loader) {
+    loader.textContent = '3D READY';
+  }
+  if (wrap) {
+    window.setTimeout(() => {
+      wrap.classList.add('is-ready');
+    }, 250);
+  }
+}
+
+function loadMatterJs() {
+  if (window.Matter) {
+    return Promise.resolve(window.Matter);
+  }
+  return new Promise((resolve, reject) => {
+    const existing = document.querySelector('script[data-matter-js="true"]');
+    if (existing) {
+      existing.addEventListener('load', () => resolve(window.Matter), { once: true });
+      existing.addEventListener('error', () => reject(new Error('Failed to load Matter.js')), { once: true });
+      return;
+    }
+    const script = document.createElement('script');
+    script.src = 'https://cdn.jsdelivr.net/npm/matter-js@0.20.0/build/matter.min.js';
+    script.async = true;
+    script.dataset.matterJs = 'true';
+    script.onload = () => resolve(window.Matter);
+    script.onerror = () => reject(new Error('Failed to load Matter.js'));
+    document.head.appendChild(script);
+  });
+}
+
+function getPhysicsTargets() {
+  const targetSelectors = [
+    'header .brand-mark',
+    '.alras-item',
+    '.feature-card:not(.hidden)',
+    '.hero-copy',
+    '.hero-three-wrap',
+    '.app-header',
+    '.flashcard',
+    '.controls button',
+    '.history-table',
+    '.wordle-input-group',
+    '.set-challenge-card'
+  ];
+  const all = Array.from(document.querySelectorAll(targetSelectors.join(',')));
+  const toggle = document.getElementById('physics-toggle-btn');
+  return all.filter((el) => {
+    if (el === toggle) return false;
+    if (window.getComputedStyle(el).display === 'none') return false;
+    const rect = el.getBoundingClientRect();
+    return rect.width > 30 && rect.height > 30;
+  });
+}
+
+function createWorldBounds(Matter) {
+  const { Bodies, World } = Matter;
+  const thickness = 120;
+  const width = window.innerWidth;
+  const height = window.innerHeight;
+  const bounds = [
+    Bodies.rectangle(width / 2, -thickness / 2, width, thickness, { isStatic: true }),
+    Bodies.rectangle(width / 2, height + thickness / 2, width, thickness, { isStatic: true }),
+    Bodies.rectangle(-thickness / 2, height / 2, thickness, height, { isStatic: true }),
+    Bodies.rectangle(width + thickness / 2, height / 2, thickness, height, { isStatic: true })
+  ];
+  World.add(physicsState.engine.world, bounds);
+  physicsState.boundaries = bounds;
+}
+
+function activatePhysicsMode(Matter) {
+  const { Engine, Runner, Bodies, Body, World, Events, Mouse, MouseConstraint } = Matter;
+  const toggleBtn = document.getElementById('physics-toggle-btn');
+  if (!toggleBtn) return;
+
+  physicsState.engine = Engine.create();
+  physicsState.engine.gravity.y = 0.9;
+  physicsState.runner = Runner.create();
+  physicsState.bodyMap = [];
+  physicsState.beforeStyles = new Map();
+
+  createWorldBounds(Matter);
+
+  const targets = getPhysicsTargets();
+  targets.forEach((el) => {
+    const rect = el.getBoundingClientRect();
+    const centerX = rect.left + rect.width / 2;
+    const centerY = rect.top + rect.height / 2;
+
+    physicsState.beforeStyles.set(el, {
+      left: el.style.left,
+      top: el.style.top,
+      width: el.style.width,
+      height: el.style.height,
+      position: el.style.position,
+      zIndex: el.style.zIndex,
+      transform: el.style.transform
+    });
+
+    el.classList.add('physics-floating');
+    el.style.left = `${centerX}px`;
+    el.style.top = `${centerY}px`;
+    el.style.width = `${rect.width}px`;
+    el.style.height = `${rect.height}px`;
+
+    const body = Bodies.rectangle(centerX, centerY, rect.width, rect.height, {
+      restitution: 0.55,
+      friction: 0.015,
+      frictionAir: 0.012,
+      density: 0.0016
+    });
+    Body.setVelocity(body, {
+      x: (Math.random() - 0.5) * 8,
+      y: -Math.random() * 6
+    });
+    physicsState.bodyMap.push({ el, body });
+  });
+
+  World.add(physicsState.engine.world, physicsState.bodyMap.map(({ body }) => body));
+
+  const mouse = Mouse.create(document.body);
+  physicsState.mouseConstraint = MouseConstraint.create(physicsState.engine, {
+    mouse,
+    constraint: {
+      stiffness: 0.2,
+      damping: 0.15,
+      render: { visible: false }
+    }
+  });
+  World.add(physicsState.engine.world, physicsState.mouseConstraint);
+
+  physicsState.syncHandler = () => {
+    physicsState.bodyMap.forEach(({ el, body }) => {
+      el.style.left = `${body.position.x}px`;
+      el.style.top = `${body.position.y}px`;
+      el.style.transform = `translate(-50%, -50%) rotate(${body.angle}rad)`;
+    });
+  };
+
+  Events.on(physicsState.engine, 'afterUpdate', physicsState.syncHandler);
+  Runner.run(physicsState.runner, physicsState.engine);
+
+  physicsState.active = true;
+  toggleBtn.classList.add('active');
+  toggleBtn.textContent = 'Physics Off';
+}
+
+function deactivatePhysicsMode() {
+  const Matter = physicsState.matter || window.Matter;
+  const toggleBtn = document.getElementById('physics-toggle-btn');
+  if (!Matter || !physicsState.engine) return;
+  const { Events, World, Runner, Engine } = Matter;
+
+  if (physicsState.syncHandler) {
+    Events.off(physicsState.engine, 'afterUpdate', physicsState.syncHandler);
+  }
+  if (physicsState.mouseConstraint) {
+    World.remove(physicsState.engine.world, physicsState.mouseConstraint);
+  }
+  if (physicsState.boundaries.length) {
+    World.remove(physicsState.engine.world, physicsState.boundaries);
+  }
+  if (physicsState.bodyMap.length) {
+    World.remove(physicsState.engine.world, physicsState.bodyMap.map(({ body }) => body));
+  }
+
+  Runner.stop(physicsState.runner);
+  Engine.clear(physicsState.engine);
+
+  physicsState.bodyMap.forEach(({ el }) => {
+    const before = physicsState.beforeStyles.get(el);
+    el.classList.remove('physics-floating');
+    el.style.left = before?.left || '';
+    el.style.top = before?.top || '';
+    el.style.width = before?.width || '';
+    el.style.height = before?.height || '';
+    el.style.position = before?.position || '';
+    el.style.zIndex = before?.zIndex || '';
+    el.style.transform = before?.transform || '';
+  });
+
+  physicsState.active = false;
+  physicsState.engine = null;
+  physicsState.runner = null;
+  physicsState.mouseConstraint = null;
+  physicsState.boundaries = [];
+  physicsState.bodyMap = [];
+  physicsState.beforeStyles = new Map();
+  physicsState.syncHandler = null;
+
+  if (toggleBtn) {
+    toggleBtn.classList.remove('active');
+    toggleBtn.textContent = 'Physics Mode';
+  }
+}
+
+async function togglePhysicsMode() {
+  const toggleBtn = document.getElementById('physics-toggle-btn');
+  if (!toggleBtn || physicsState.loading) return;
+
+  if (physicsState.active) {
+    deactivatePhysicsMode();
+    return;
+  }
+
+  physicsState.loading = true;
+  toggleBtn.textContent = 'Loading Physics...';
+  try {
+    const Matter = await loadMatterJs();
+    physicsState.matter = Matter;
+    activatePhysicsMode(Matter);
+  } catch (error) {
+    toggleBtn.textContent = 'Physics Mode';
+    window.alert('Unable to load physics engine right now. Please try again.');
+  } finally {
+    physicsState.loading = false;
+  }
+}
+
+function updateAsciiFrame() {
+  const loader = getAsciiLoaderElement();
+  if (!loader) return;
+  loader.textContent = asciiFrames[asciiState.index];
+  asciiState.index = (asciiState.index + 1) % asciiFrames.length;
+}
+
+function shouldRunAsciiTicker() {
+  const hero = document.querySelector('.hero');
+  if (!hero) return false;
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return false;
+  const heroVisible = window.getComputedStyle(hero).display !== 'none';
+  return heroVisible && !document.hidden;
+}
+
+function startAsciiTicker() {
+  if (asciiState.timer) return;
+  updateAsciiFrame();
+  asciiState.timer = window.setInterval(updateAsciiFrame, 650);
+}
+
+function stopAsciiTicker() {
+  if (!asciiState.timer) return;
+  clearInterval(asciiState.timer);
+  asciiState.timer = null;
+}
+
+function syncAsciiTicker() {
+  if (shouldRunAsciiTicker()) {
+    startAsciiTicker();
+  } else {
+    stopAsciiTicker();
+  }
+}
+
+function clearSectionTransitionTimer() {
+  if (sectionTransitionState.timer) {
+    clearTimeout(sectionTransitionState.timer);
+    sectionTransitionState.timer = null;
+  }
+}
+
+function getSectionElements() {
+  const hero = document.querySelector('.hero');
+  const screens = screenIds
+    .map((id) => document.getElementById(id))
+    .filter((el) => el);
+  return hero ? [hero, ...screens] : screens;
+}
+
+function getVisibleSections() {
+  return getSectionElements().filter((el) => window.getComputedStyle(el).display !== 'none');
+}
+
+function markSectionEntering(el) {
+  el.classList.remove('section-exit');
+  el.classList.add('section-enter');
+}
+
+function markSectionExiting(el) {
+  el.classList.remove('section-enter');
+  el.classList.add('section-exit');
+}
+
+function hideAllScreens() {
+  clearSectionTransitionTimer();
+  screenIds.forEach((id) => {
+    const el = document.getElementById(id);
+    if (el) {
+      el.classList.remove('section-enter', 'section-exit');
+      el.style.display = 'none';
+    }
+  });
+  const hero = document.querySelector('.hero');
+  if (hero) {
+    hero.classList.remove('section-enter', 'section-exit');
+    hero.style.display = 'none';
+  }
+}
+
+function openScreen(screenId, {
+  route,
+  heroDisplay = 'none',
+  scroll = true
+} = {}) {
+  const hero = document.querySelector('.hero');
+  const screen = document.getElementById(screenId);
+  if (!screen) return;
+
+  clearSectionTransitionTimer();
+
+  const nextVisible = new Set([screen]);
+  if (hero && heroDisplay !== 'none') {
+    nextVisible.add(hero);
+  }
+
+  const visibleSections = getVisibleSections();
+  const exitingSections = visibleSections.filter((el) => !nextVisible.has(el));
+
+  const showTarget = () => {
+    hideAllScreens();
+    if (hero) {
+      hero.style.display = heroDisplay;
+      if (heroDisplay !== 'none') {
+        markSectionEntering(hero);
+      }
+    }
+    screen.style.display = 'block';
+    markSectionEntering(screen);
+    animateTextFlip(screen.querySelector('.app-header h3'));
+    animateTextFlip(screen.querySelector('.app-header .muted-subtitle'));
+    animateJump(screenId);
+    if (scroll) {
+      screen.scrollIntoView({ behavior: 'smooth' });
+    }
+    setRoute(route);
+    syncAsciiTicker();
+  };
+
+  if (exitingSections.length === 0) {
+    showTarget();
+    return;
+  }
+
+  exitingSections.forEach(markSectionExiting);
+  sectionTransitionState.timer = window.setTimeout(showTarget, sectionTransitionMs);
+}
+
+function openRouteFromHash() {
+  const routeKey = (window.location.hash || '#home').replace('#', '');
+  const routeHandler = routeMap[routeKey] || showLanding;
+  routeHandler();
+}
 
 function selectAlras(alras) {
   currentAlras = alras;
   const settings = alrasSettings[alras] || alrasSettings['EN ALRAS'];
   const isHist = alras === 'HIST ALRAS';
   const isEn = alras === 'EN ALRAS';
-  document.querySelector('header .brand h1').textContent = `HPCCSS 5B ${settings.headerName} ALRAS`;
-  document.getElementById('hero-title').textContent = `ALRAS - ${settings.sectionName} Section`;
-  document.getElementById('hero-description').innerHTML = settings.description;
+  setTextWithFlip(document.querySelector('header .brand h1'), `HPCCSS 5B ${settings.headerName} ALRAS`);
+  setTextWithFlip(document.getElementById('hero-title'), `ALRAS - ${settings.sectionName} Section`);
+  setTextWithFlip(document.getElementById('hero-description'), settings.description, true);
 
   const primaryTitle = document.getElementById('primary-feature-title');
   const primaryDesc = document.getElementById('primary-feature-desc');
@@ -65,9 +538,13 @@ function selectAlras(alras) {
     primaryTitle.textContent = 'Common Abbreviations';
     primaryDesc.textContent = ' Regional, country, policy, politics, and military abbreviations.';
     primaryCard.setAttribute('onclick', 'openHistoryAbbreviations()');
+    primaryCard.style.cursor = 'pointer';
+    primaryCard.style.opacity = '1';
     secondaryTitle.textContent = 'Cold War Notes';
     secondaryDesc.textContent = '(1945 ~ 1991) Cold War Notes';
     secondaryCard.setAttribute('onclick', 'openColdWarNotes()');
+    secondaryCard.style.cursor = 'pointer';
+    secondaryCard.style.opacity = '1';
     tertiaryTitle.textContent = 'Hong Kong History Notes';
     tertiaryDesc.textContent = '(1900 ~ 2000) Hong Kong History Notes';
     tertiaryCard.setAttribute('onclick', 'openHkHistoryNotes()');
@@ -79,9 +556,13 @@ function selectAlras(alras) {
     primaryTitle.textContent = 'Generic Vocabulary Flashcards';
     primaryDesc.textContent = 'Tap to enter the built-in flashcard trainer and practice 50+ vocabulary words with meanings and example sentences.';
     primaryCard.setAttribute('onclick', 'openFlashcards()');
+    primaryCard.style.cursor = 'pointer';
+    primaryCard.style.opacity = '1';
     secondaryTitle.textContent = 'Wordle Game';
     secondaryDesc.textContent = 'Challenge yourself with the popular word-guessing game. Guess the five-letter word in 6 attempts using vocabulary from your course.';
     secondaryCard.setAttribute('onclick', 'openWordle()');
+    secondaryCard.style.cursor = 'pointer';
+    secondaryCard.style.opacity = '1';
     tertiaryTitle.textContent = 'Vocabulary Set Challenge';
     tertiaryDesc.textContent = 'Choose a synonym set and fill in the rest of the words using first-two-letter hints.';
     tertiaryCard.setAttribute('onclick', 'openSetChallenge()');
@@ -90,12 +571,18 @@ function selectAlras(alras) {
     quaternaryCard.classList.add('hidden');
     quaternaryCard.style.display = 'none';
   } else {
-    primaryTitle.textContent = 'Generic Vocabulary Flashcards';
-    primaryDesc.textContent = 'Tap to enter the built-in flashcard trainer and practice 50+ vocabulary words with meanings and example sentences.';
-    primaryCard.setAttribute('onclick', 'openFlashcards()');
-    secondaryTitle.textContent = 'Wordle Game';
-    secondaryDesc.textContent = 'Challenge yourself with the popular word-guessing game. Guess the five-letter word in 6 attempts using vocabulary from your course.';
-    secondaryCard.setAttribute('onclick', 'openWordle()');
+    primaryTitle.textContent = `${settings.sectionName} Section (Coming Soon)`;
+    primaryDesc.textContent = 'This section is under preparation. New resources and exercises will be available soon.';
+    primaryCard.removeAttribute('onclick');
+    primaryCard.onclick = null;
+    primaryCard.style.cursor = 'not-allowed';
+    primaryCard.style.opacity = '0.75';
+    secondaryTitle.textContent = 'Stay Tuned';
+    secondaryDesc.textContent = 'We are building this section now. Please come back later for updates.';
+    secondaryCard.removeAttribute('onclick');
+    secondaryCard.onclick = null;
+    secondaryCard.style.cursor = 'not-allowed';
+    secondaryCard.style.opacity = '0.75';
     tertiaryCard.classList.add('hidden');
     tertiaryCard.style.display = 'none';
     quaternaryCard.classList.add('hidden');
@@ -106,8 +593,14 @@ function selectAlras(alras) {
     btn.classList.toggle('active', btn.textContent === alras);
   });
   document.getElementById('sidebar-update-logs').classList.remove('active');
-  document.querySelector('#update-logs-app .app-header p').textContent = `View recent updates and improvements to ${alras}.`;
-  document.querySelector('#wordle-app .app-header p').textContent = `Guess the five-letter vocabulary word in 6 attempts.`;
+  setTextWithFlip(
+    document.querySelector('#update-logs-app .app-header p'),
+    `View recent updates and improvements to ${alras}.`
+  );
+  setTextWithFlip(
+    document.querySelector('#wordle-app .app-header p'),
+    'Guess the five-letter vocabulary word in 6 attempts.'
+  );
   showLanding();
 }
 
@@ -219,17 +712,8 @@ function submitSetChallenge() {
 }
 
 function openSetChallenge() {
-  document.getElementById('flashcard-app').style.display = 'none';
-  document.getElementById('history-table-app').style.display = 'none';
-  document.getElementById('cold-war-app').style.display = 'none';
-  document.getElementById('hk-history-app').style.display = 'none';
-  document.getElementById('jp-history-app').style.display = 'none';
-  document.getElementById('update-logs-app').style.display = 'none';
-  document.getElementById('wordle-app').style.display = 'none';
-  document.getElementById('set-challenge-app').style.display = 'block';
-  document.querySelector('.hero').style.display = 'none';
+  openScreen('set-challenge-app', { route: 'challenge' });
   startSetChallenge();
-  document.getElementById('set-challenge-app').scrollIntoView({ behavior: 'smooth' });
 }
 
 function initializeWordle() {
@@ -297,6 +781,15 @@ function updateWordleDisplay() {
 
   // Update attempts
   document.getElementById('attempts-text').textContent = `Attempts remaining: ${wordleState.attempts}`;
+  const progressFill = document.getElementById('wordle-progress-fill');
+  const progressTrack = document.querySelector('.wordle-progress');
+  if (progressFill) {
+    const percentage = (wordleState.attempts / 6) * 100;
+    progressFill.style.width = `${percentage}%`;
+  }
+  if (progressTrack) {
+    progressTrack.setAttribute('aria-valuenow', String(wordleState.attempts));
+  }
 
   // Update status
   let statusText = '';
@@ -371,126 +864,210 @@ function submitGuess() {
 }
 
 function openWordle() {
-  document.getElementById('flashcard-app').style.display = 'none';
-  document.getElementById('history-table-app').style.display = 'none';
-  document.getElementById('cold-war-app').style.display = 'none';
-  document.getElementById('hk-history-app').style.display = 'none';
-  document.getElementById('jp-history-app').style.display = 'none';
-  document.getElementById('update-logs-app').style.display = 'none';
-  document.getElementById('set-challenge-app').style.display = 'none';
-  document.getElementById('wordle-app').style.display = 'block';
+  openScreen('wordle-app', { route: 'wordle' });
   initializeWordle();
   document.getElementById('guess-input').disabled = false;
-  document.getElementById('wordle-app').scrollIntoView({ behavior: 'smooth' });
 }
 
 function openHistoryAbbreviations() {
-  document.getElementById('flashcard-app').style.display = 'none';
-  document.getElementById('history-table-app').style.display = 'block';
-  document.getElementById('cold-war-app').style.display = 'none';
-  document.getElementById('hk-history-app').style.display = 'none';
-  document.getElementById('jp-history-app').style.display = 'none';
-  document.getElementById('update-logs-app').style.display = 'none';
-  document.getElementById('set-challenge-app').style.display = 'none';
-  document.getElementById('wordle-app').style.display = 'none';
-  document.querySelector('.hero').style.display = 'none';
-  document.getElementById('history-table-app').scrollIntoView({ behavior: 'smooth' });
+  openScreen('history-table-app', { route: 'abbreviations' });
 }
 
 function openColdWarNotes() {
-  document.getElementById('flashcard-app').style.display = 'none';
-  document.getElementById('history-table-app').style.display = 'none';
-  document.getElementById('cold-war-app').style.display = 'block';
-  document.getElementById('hk-history-app').style.display = 'none';
-  document.getElementById('jp-history-app').style.display = 'none';
-  document.getElementById('update-logs-app').style.display = 'none';
-  document.getElementById('set-challenge-app').style.display = 'none';
-  document.getElementById('wordle-app').style.display = 'none';
-  document.querySelector('.hero').style.display = 'none';
-  document.getElementById('cold-war-app').scrollIntoView({ behavior: 'smooth' });
+  openScreen('cold-war-app', { route: 'cold-war' });
 }
 
 function openHkHistoryNotes() {
-  document.getElementById('flashcard-app').style.display = 'none';
-  document.getElementById('history-table-app').style.display = 'none';
-  document.getElementById('cold-war-app').style.display = 'none';
-  document.getElementById('hk-history-app').style.display = 'block';
-  document.getElementById('jp-history-app').style.display = 'none';
-  document.getElementById('update-logs-app').style.display = 'none';
-  document.getElementById('set-challenge-app').style.display = 'none';
-  document.getElementById('wordle-app').style.display = 'none';
-  document.querySelector('.hero').style.display = 'none';
-  document.getElementById('hk-history-app').scrollIntoView({ behavior: 'smooth' });
+  openScreen('hk-history-app', { route: 'hk-history' });
 }
 
 function openJpHistoryNotes() {
-  document.getElementById('flashcard-app').style.display = 'none';
-  document.getElementById('history-table-app').style.display = 'none';
-  document.getElementById('cold-war-app').style.display = 'none';
-  document.getElementById('hk-history-app').style.display = 'none';
-  document.getElementById('jp-history-app').style.display = 'block';
-  document.getElementById('update-logs-app').style.display = 'none';
-  document.getElementById('set-challenge-app').style.display = 'none';
-  document.getElementById('wordle-app').style.display = 'none';
-  document.querySelector('.hero').style.display = 'none';
-  document.getElementById('jp-history-app').scrollIntoView({ behavior: 'smooth' });
+  openScreen('jp-history-app', { route: 'jp-history' });
 }
 
 function showLanding() {
-  document.querySelector('main').scrollIntoView({ behavior: 'smooth' });
-  document.getElementById('flashcard-app').style.display = 'none';
-  document.getElementById('history-table-app').style.display = 'none';
-  document.getElementById('cold-war-app').style.display = 'none';
-  document.getElementById('hk-history-app').style.display = 'none';
-  document.getElementById('jp-history-app').style.display = 'none';
-  document.getElementById('set-challenge-app').style.display = 'none';
-  document.getElementById('update-logs-app').style.display = 'none';
-  document.getElementById('wordle-app').style.display = 'none';
-  document.querySelector('.hero').style.display = 'grid';
-  const settings = alrasSettings[currentAlras] || alrasSettings['EN ALRAS'];
-  document.querySelector('header .brand h1').textContent = `HPCCSS 5B ${settings.headerName} ALRAS`;
+  clearSectionTransitionTimer();
+  const hero = document.querySelector('.hero');
+  if (!hero) return;
+  const exitingSections = getVisibleSections().filter((el) => el !== hero);
+
+  const showHome = () => {
+    document.querySelector('main').scrollIntoView({ behavior: 'smooth' });
+    hideAllScreens();
+    hero.style.display = 'grid';
+    markSectionEntering(hero);
+    const settings = alrasSettings[currentAlras] || alrasSettings['EN ALRAS'];
+    setTextWithFlip(document.querySelector('header .brand h1'), `HPCCSS 5B ${settings.headerName} ALRAS`);
+    animateTextFlip(document.getElementById('hero-title'));
+    animateTextFlip(document.getElementById('hero-description'));
+    restartFeatureCardEntrance();
+    animateJump('primary-feature-card');
+    setRoute('home');
+    syncAsciiTicker();
+  };
+
+  if (exitingSections.length === 0) {
+    showHome();
+    return;
+  }
+
+  exitingSections.forEach(markSectionExiting);
+  sectionTransitionState.timer = window.setTimeout(showHome, sectionTransitionMs);
 }
 
 function openFlashcards() {
-  document.getElementById('flashcard-app').style.display = 'block';
-  document.getElementById('history-table-app').style.display = 'none';
-  document.getElementById('cold-war-app').style.display = 'none';
-  document.getElementById('hk-history-app').style.display = 'none';
-  document.getElementById('jp-history-app').style.display = 'none';
-  document.getElementById('update-logs-app').style.display = 'none';
-  document.getElementById('set-challenge-app').style.display = 'none';
-  document.getElementById('wordle-app').style.display = 'none';
+  openScreen('flashcard-app', { route: 'flashcards', heroDisplay: 'grid' });
   document.getElementById('loading').style.display = 'block';
   document.getElementById('app').style.display = 'none';
   renderCard();
-  document.querySelector('.hero').style.display = 'grid';
-  document.getElementById('flashcard-app').scrollIntoView({ behavior: 'smooth' });
+}
+
+function formatUpdateDate(value) {
+  const date = new Date(value);
+  return date.toLocaleDateString('en-CA', {
+    timeZone: updateLogsConfig.timezone
+  }).replace(/-/g, '/');
+}
+
+function formatUpdateTime(value) {
+  const date = new Date(value);
+  return `${date.toLocaleTimeString('en-GB', {
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: false,
+    timeZone: updateLogsConfig.timezone
+  }).replace(':', '')} GMT+8`;
+}
+
+function renderUpdateStatus(container, badge, message) {
+  container.innerHTML = '';
+  const entry = document.createElement('div');
+  entry.className = 'log-entry';
+  const item = document.createElement('div');
+  item.className = 'log-item';
+  const badgeEl = document.createElement('span');
+  badgeEl.className = 'log-badge';
+  badgeEl.textContent = badge;
+  const messageEl = document.createElement('span');
+  messageEl.textContent = message;
+  item.appendChild(badgeEl);
+  item.appendChild(messageEl);
+  entry.appendChild(item);
+  container.appendChild(entry);
+}
+
+function renderUpdateLogs(commits) {
+  const container = document.getElementById('update-logs-container');
+  if (!container) return;
+  container.innerHTML = '';
+
+  if (!Array.isArray(commits) || commits.length === 0) {
+    renderUpdateStatus(container, '[!]', 'No commit logs available.');
+    return;
+  }
+
+  const groupedCommits = new Map();
+  commits.forEach((commit) => {
+    const commitDate = commit?.commit?.author?.date;
+    if (!commitDate) return;
+    const dateKey = formatUpdateDate(commitDate);
+    if (!groupedCommits.has(dateKey)) {
+      groupedCommits.set(dateKey, []);
+    }
+    groupedCommits.get(dateKey).push(commit);
+  });
+
+  groupedCommits.forEach((dailyCommits, dateKey) => {
+    const entry = document.createElement('div');
+    entry.className = 'log-entry';
+
+    const dateRow = document.createElement('div');
+    dateRow.className = 'log-date';
+    const dateText = document.createElement('strong');
+    const firstCommitTime = dailyCommits[0]?.commit?.author?.date;
+    dateText.textContent = `[${dateKey}] ${formatUpdateTime(firstCommitTime)}`;
+    dateRow.appendChild(dateText);
+    entry.appendChild(dateRow);
+
+    dailyCommits.forEach((commit) => {
+      const item = document.createElement('div');
+      item.className = 'log-item';
+
+      const badge = document.createElement('span');
+      badge.className = 'log-badge';
+      badge.textContent = '[+]';
+
+      const summary = document.createElement('span');
+      const commitMessage = (commit?.commit?.message || '').split('\n')[0].trim();
+      const commitSha = (commit?.sha || '').slice(0, 7);
+      const commitAuthor = commit?.author?.login || commit?.commit?.author?.name || 'unknown';
+      summary.textContent = `${commitSha} - ${commitMessage || '(no commit message)'} (${commitAuthor})`;
+
+      item.appendChild(badge);
+      item.appendChild(summary);
+      entry.appendChild(item);
+    });
+
+    container.appendChild(entry);
+  });
+}
+
+async function loadUpdateLogs(forceRefresh = false) {
+  const container = document.getElementById('update-logs-container');
+  if (!container) return;
+  if (updateLogsState.isLoading) return;
+  if (updateLogsState.isLoaded && !forceRefresh) return;
+
+  updateLogsState.isLoading = true;
+  renderUpdateStatus(container, '[..]', 'Loading update logs from GitHub commits...');
+
+  try {
+    const response = await fetch(
+      `https://api.github.com/repos/${updateLogsConfig.owner}/${updateLogsConfig.repo}/commits?per_page=${updateLogsConfig.perPage}`,
+      {
+        headers: {
+          Accept: 'application/vnd.github+json'
+        }
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error(`Request failed (${response.status})`);
+    }
+
+    const commits = await response.json();
+    renderUpdateLogs(commits);
+    updateLogsState.isLoaded = true;
+  } catch (error) {
+    renderUpdateStatus(
+      container,
+      '[!]',
+      `Unable to load commit logs. ${error?.message || 'Please try again later.'}`
+    );
+    updateLogsState.isLoaded = false;
+  } finally {
+    updateLogsState.isLoading = false;
+  }
 }
 
 function openUpdateLogs() {
-  document.getElementById('flashcard-app').style.display = 'none';
-  document.getElementById('history-table-app').style.display = 'none';
-  document.getElementById('cold-war-app').style.display = 'none';
-  document.getElementById('hk-history-app').style.display = 'none';
-  document.getElementById('jp-history-app').style.display = 'none';
-  document.getElementById('set-challenge-app').style.display = 'none';
-  document.getElementById('update-logs-app').style.display = 'block';
-  document.getElementById('wordle-app').style.display = 'none';
-  document.querySelector('.hero').style.display = 'none';
-  document.querySelector('header .brand h1').textContent = 'HPCCSS 5B ALRAS Update Logs';
+  openScreen('update-logs-app', { route: 'updates' });
+  setTextWithFlip(document.querySelector('header .brand h1'), 'HPCCSS 5B ALRAS Update Logs');
   document.querySelectorAll('.alras-item').forEach((btn) => btn.classList.remove('active'));
   document.getElementById('sidebar-update-logs').classList.add('active');
-  document.getElementById('update-logs-app').scrollIntoView({ behavior: 'smooth' });
+  loadUpdateLogs();
 }
 
 window.addEventListener('load', () => {
-  document.getElementById('flashcard-app').style.display = 'none';
-  document.getElementById('history-table-app').style.display = 'none';
-  document.getElementById('cold-war-app').style.display = 'none';
-  document.getElementById('update-logs-app').style.display = 'none';
-  document.getElementById('wordle-app').style.display = 'none';
+  hideAllScreens();
   selectAlras(currentAlras);
+  openRouteFromHash();
   if (typeof cards !== 'undefined' && cards.length === 0) {
     document.getElementById('loading').innerText = 'No data found.';
   }
+  syncAsciiTicker();
 });
+
+window.addEventListener('hashchange', openRouteFromHash);
+document.addEventListener('visibilitychange', syncAsciiTicker);
+window.addEventListener('hero3d:ready', markHero3dReady);

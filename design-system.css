@@ -1,0 +1,63 @@
+:root {
+  --bg: #d9d9d9;
+  --surface: #e6e6e6;
+  --surface-soft: #f2f2f2;
+  --ink: #141414;
+  --text: #141414;
+  --muted: #4d4d4d;
+  --primary: #e7ff00;
+  --accent: #e7ff00;
+  --border: #111111;
+  --success: #2e9c3f;
+  --danger: #c43a3a;
+  --shadow: 4px 4px 0 #111111;
+  --font: "Arial Narrow", "Helvetica Neue", Arial, sans-serif;
+  --dur-fast: 120ms;
+  --dur-base: 220ms;
+  --dur-slow: 340ms;
+  --ease-snap: cubic-bezier(0.2, 0.9, 0.2, 1);
+  --ease-linear: linear;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: var(--font);
+  color: var(--text);
+  background: var(--bg);
+  letter-spacing: 0.01em;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+h1,
+h2,
+h3,
+h4,
+.sidebar-title,
+.alras-item,
+button {
+  font-family: var(--font);
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 1ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 1ms !important;
+  }
+}

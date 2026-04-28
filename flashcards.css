@@ -11,11 +11,12 @@
   position: relative;
   width: 100%;
   height: 100%;
-  border-radius: 28px;
+  border-radius: 0;
   overflow: hidden;
+  border: 3px solid var(--border);
   box-shadow: var(--shadow);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  background: rgba(255, 255, 255, 0.06);
+  background: #fff;
+  transition: box-shadow var(--dur-fast) var(--ease-linear);
 }
 
 .card-front,
@@ -25,36 +26,34 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-  gap: 18px;
-  padding: 32px;
+  gap: 16px;
+  padding: 28px;
   color: var(--text);
-  transition: transform 0.4s ease, opacity 0.4s ease;
-  will-change: opacity, transform;
+  transition: opacity var(--dur-med) var(--ease-snap), transform var(--dur-med) var(--ease-snap);
 }
 
 .card-front {
-  transform: translateY(0);
+  background: var(--primary);
   opacity: 1;
-  z-index: 2;
-  background: linear-gradient(180deg, rgba(124, 156, 255, 0.18), rgba(8, 16, 31, 0.95));
+  transform: translateY(0);
 }
 
 .card-back {
-  transform: translateY(20px);
+  background: #fff;
   opacity: 0;
-  z-index: 1;
-  background: linear-gradient(180deg, rgba(8, 16, 31, 0.98), rgba(18, 28, 46, 0.98));
+  transform: translateY(10px);
+  pointer-events: none;
 }
 
 .flashcard.flipped .card-front {
-  transform: translateY(-20px) !important;
-  opacity: 0 !important;
+  opacity: 0;
+  transform: translateY(-10px);
   pointer-events: none;
 }
 
 .flashcard.flipped .card-back {
-  transform: translateY(0) !important;
-  opacity: 1 !important;
+  opacity: 1;
+  transform: translateY(0);
   pointer-events: auto;
 }
 
@@ -66,24 +65,31 @@
 }
 
 .hint {
-  color: rgba(255, 255, 255, 0.7);
-  font-size: 0.95rem;
+  color: #333;
+  font-size: 0.92rem;
+  font-weight: 700;
 }
 
 .meaning {
   font-size: 1.75rem;
-  font-weight: 700;
-  color: var(--accent);
+  font-weight: 800;
+  color: #111;
 }
 
 .usage,
 .sentence {
   font-size: 1rem;
-  line-height: 1.7;
+  line-height: 1.6;
   color: var(--muted);
 }
 
 .sentence {
-  border-left: 3px solid rgba(124, 156, 255, 0.5);
+  border-left: 4px solid #111;
   padding-left: 14px;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .flashcard:hover .card-inner {
+    box-shadow: 6px 6px 0 var(--border);
+  }
 }
