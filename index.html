@@ -1,0 +1,2418 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HPCCSS 5B ALRAS</title>
+  <style>
+    /* --- DESIGN SYSTEM (Dark & Professional) --- */
+    :root {
+      /* Color Palette */
+      --bg: #0f1115;
+      --surface: #181b21;
+      --surface-soft: #22262f;
+      --surface-hover: #2a2f3a;
+      --border: #333946;
+      --border-light: #444c5e;
+      
+      /* Typography Colors */
+      --text: #f1f5f9;
+      --muted: #94a3b8;
+      --ink: #ffffff;
+      
+      /* Accents */
+      --primary: #3b82f6;      /* Professional Blue */
+      --primary-hover: #2563eb;
+      --accent: #8b5cf6;       /* Subtle Purple */
+      --success: #10b981;      /* Emerald Green */
+      --warning: #f59e0b;      /* Amber */
+      --danger: #ef4444;       /* Red */
+      
+      /* Aesthetics */
+      --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.4);
+      --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
+      --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.5), 0 4px 6px -2px rgba(0, 0, 0, 0.3);
+      --radius-sm: 6px;
+      --radius-md: 10px;
+      --radius-lg: 16px;
+      
+      /* Typography */
+      --font: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: var(--font);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    h1, h2, h3, h4, h5 {
+      color: var(--ink);
+      font-weight: 600;
+      letter-spacing: -0.01em;
+    }
+
+    button {
+      font-family: var(--font);
+      cursor: pointer;
+      border: none;
+      outline: none;
+      transition: all 0.2s ease;
+    }
+
+    .hidden { display: none !important; }
+
+    /* --- HEADER --- */
+    header {
+      background-color: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 16px 32px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .brand {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .brand h1 {
+      font-size: 1.25rem;
+      color: var(--primary);
+      font-weight: 700;
+    }
+
+    .brand p {
+      font-size: 0.8rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-top: 2px;
+    }
+
+    .header-nav {
+      display: flex;
+      gap: 12px;
+    }
+
+    .nav-btn {
+      padding: 8px 16px;
+      background-color: var(--surface-soft);
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      font-size: 0.875rem;
+      font-weight: 500;
+    }
+
+    .nav-btn:hover {
+      background-color: var(--surface-hover);
+      border-color: var(--border-light);
+    }
+
+    .nav-btn.primary {
+      background-color: var(--primary);
+      color: #fff;
+      border-color: var(--primary);
+    }
+
+    .nav-btn.primary:hover {
+      background-color: var(--primary-hover);
+    }
+
+    .nav-btn.secondary {
+      background-color: var(--surface-soft);
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+
+    .nav-btn.secondary:hover {
+      background-color: var(--surface-hover);
+      border-color: var(--border-light);
+    }
+
+    /* --- LAYOUT --- */
+    main {
+      flex: 1;
+      display: flex;
+      width: 100%;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    .page-grid {
+      display: grid;
+      grid-template-columns: 260px 1fr;
+      width: 100%;
+      min-height: calc(100vh - 70px);
+    }
+
+    /* --- SIDEBAR --- */
+    .alras-sidebar {
+      background-color: var(--surface);
+      border-right: 1px solid var(--border);
+      padding: 24px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .sidebar-title {
+      font-size: 0.75rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      margin-bottom: 12px;
+      padding-left: 12px;
+    }
+
+    .alras-item {
+      background: transparent;
+      color: var(--text);
+      text-align: left;
+      padding: 10px 12px;
+      border-radius: var(--radius-sm);
+      font-size: 0.95rem;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      border-left: 3px solid transparent;
+    }
+
+    .alras-item:hover {
+      background-color: var(--surface-soft);
+    }
+
+    .alras-item.active {
+      background-color: rgba(59, 130, 246, 0.1);
+      color: var(--primary);
+      border-left-color: var(--primary);
+      font-weight: 600;
+    }
+
+    /* --- CONTENT AREA --- */
+    .content-area {
+      padding: 40px;
+      overflow-y: auto;
+    }
+
+    .section-header {
+      margin-bottom: 32px;
+    }
+
+    .section-header h2 {
+      font-size: 2rem;
+      margin-bottom: 8px;
+    }
+
+    .section-header p {
+      color: var(--muted);
+      font-size: 1.1rem;
+    }
+
+    /* --- HERO / CARDS --- */
+    .hero-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 24px;
+    }
+
+    .feature-card {
+      background-color: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      box-shadow: var(--shadow-sm);
+      transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+    }
+
+    .feature-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-md);
+      border-color: var(--border-light);
+    }
+
+    .feature-card h3 {
+      font-size: 1.25rem;
+      margin-bottom: 12px;
+      color: var(--primary);
+    }
+
+    .feature-card p {
+      color: var(--muted);
+      margin-bottom: 24px;
+      flex: 1;
+      font-size: 0.95rem;
+    }
+
+    .feature-card button {
+      background-color: var(--surface-soft);
+      color: var(--text);
+      padding: 10px 0;
+      border-radius: var(--radius-sm);
+      font-weight: 500;
+      width: 100%;
+      border: 1px solid var(--border);
+    }
+
+    .feature-card button:hover {
+      background-color: var(--primary);
+      color: #fff;
+      border-color: var(--primary);
+    }
+
+    /* --- APP SCREENS SHARED --- */
+    .app-screen {
+      display: none;
+      flex-direction: column;
+      height: 100%;
+    }
+
+    .app-screen.active {
+      display: flex;
+    }
+
+    .app-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 32px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .back-btn {
+      background: transparent;
+      color: var(--muted);
+      font-size: 0.9rem;
+      padding: 8px 12px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+    }
+
+    .back-btn:hover {
+      color: var(--text);
+      background-color: var(--surface-soft);
+    }
+
+    /* --- FLASHCARDS APP (Professional 3D Flip) --- */
+    .flashcard-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+    }
+
+    .flashcard-wrapper {
+      width: 100%;
+      max-width: 600px;
+      height: 360px;
+      perspective: 1000px; /* 3D effect */
+      margin-bottom: 32px;
+    }
+
+    .flashcard {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+      transform-style: preserve-3d;
+      cursor: pointer;
+    }
+
+    .flashcard.flipped {
+      transform: rotateY(180deg);
+    }
+
+    .card-face {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      backface-visibility: hidden;
+      border-radius: var(--radius-lg);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 40px;
+      text-align: center;
+      box-shadow: var(--shadow-md);
+      border: 1px solid var(--border);
+    }
+
+    .card-front {
+      background: linear-gradient(145deg, var(--surface), var(--surface-soft));
+    }
+
+    .card-back {
+      background: linear-gradient(145deg, #1e293b, var(--surface));
+      transform: rotateY(180deg);
+      border-color: var(--primary);
+    }
+
+    .vocab-word {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 16px;
+    }
+
+    .vocab-meaning {
+      font-size: 1.5rem;
+      color: var(--ink);
+      margin-bottom: 16px;
+    }
+
+    .vocab-usage {
+      font-size: 0.9rem;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 16px;
+    }
+
+    .vocab-sentence {
+      font-size: 1.1rem;
+      color: var(--muted);
+      font-style: italic;
+    }
+
+    .flashcard-controls {
+      display: flex;
+      gap: 16px;
+      align-items: center;
+    }
+
+    .control-btn {
+      padding: 12px 24px;
+      background-color: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--text);
+      border-radius: var(--radius-sm);
+      font-weight: 600;
+    }
+
+    .control-btn:hover:not(:disabled) {
+      background-color: var(--surface-hover);
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+
+    .control-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .progress-text {
+      color: var(--muted);
+      font-size: 0.9rem;
+      min-width: 100px;
+      text-align: center;
+    }
+
+    /* --- WORDLE APP --- */
+    .wordle-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+      max-width: 500px;
+      margin: 0 auto;
+    }
+
+    .wordle-grid {
+      display: grid;
+      grid-template-rows: repeat(6, 1fr);
+      gap: 8px;
+      margin-bottom: 24px;
+    }
+
+    .wordle-row {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 8px;
+    }
+
+    .letter-box {
+      width: 60px;
+      height: 60px;
+      border: 2px solid var(--border);
+      background-color: var(--surface);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 2rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: var(--text);
+      border-radius: var(--radius-sm);
+      transition: all 0.3s ease;
+    }
+
+    .letter-box.filled {
+      border-color: var(--border-light);
+      animation: popIn 0.1s ease;
+    }
+
+    .letter-box.correct {
+      background-color: var(--success);
+      border-color: var(--success);
+      color: #000;
+    }
+
+    .letter-box.present {
+      background-color: var(--warning);
+      border-color: var(--warning);
+      color: #000;
+    }
+
+    .letter-box.absent {
+      background-color: var(--surface-soft);
+      border-color: var(--surface-soft);
+      color: var(--muted);
+    }
+
+    @keyframes popIn {
+      0% { transform: scale(0.8); }
+      40% { transform: scale(1.1); }
+      100% { transform: scale(1); }
+    }
+
+    .wordle-input-area {
+      display: flex;
+      gap: 12px;
+      width: 100%;
+      margin-bottom: 16px;
+    }
+
+    .wordle-input-area input {
+      flex: 1;
+      padding: 12px 16px;
+      background-color: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      color: var(--text);
+      font-size: 1rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    .wordle-input-area input:focus {
+      outline: none;
+      border-color: var(--primary);
+    }
+
+    .wordle-input-area button {
+      padding: 12px 24px;
+      background-color: var(--primary);
+      color: #fff;
+      border-radius: var(--radius-sm);
+      font-weight: 600;
+    }
+
+    .wordle-input-area button:hover {
+      background-color: var(--primary-hover);
+    }
+
+    .wordle-status {
+      height: 24px;
+      margin-bottom: 16px;
+      font-weight: 600;
+      color: var(--primary);
+    }
+
+    /* --- SET CHALLENGE STYLES --- */
+    .set-challenge-row {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .set-challenge-row label {
+      flex: 0 0 120px;
+      color: var(--text);
+      font-weight: 500;
+    }
+
+    .set-challenge-input {
+      flex: 1;
+      padding: 10px 12px;
+      background-color: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      color: var(--text);
+      font-size: 0.95rem;
+      text-transform: capitalize;
+    }
+
+    .set-challenge-input:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
+    }
+
+    /* Wordle Guess Display */
+    .guess-line {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 12px;
+      justify-content: center;
+    }
+
+    /* --- ORIGINAL CONTENT STYLES (Preserved & Dark-Themed) --- */
+    .history-table table {
+      width: 100%;
+      border-collapse: collapse;
+      color: var(--text);
+      margin-bottom: 20px;
+    }
+
+    .history-table th,
+    .history-table td {
+      padding: 12px 14px;
+      border: 1px solid var(--border);
+      text-align: left;
+      background: var(--surface);
+      line-height: 1.5;
+    }
+
+    .history-table thead th {
+      background: var(--primary);
+      color: #fff;
+      font-weight: 800;
+      text-align: center;
+    }
+    
+    .history-table h4 {
+      margin-top: 20px;
+      margin-bottom: 10px;
+    }
+
+    .geog-table table {
+      width: 100%;
+      border-collapse: collapse;
+      color: var(--text);
+    }
+
+    .geog-table th,
+    .geog-table td {
+      padding: 12px;
+      border: 1px solid var(--border);
+      text-align: left;
+      background: var(--surface);
+    }
+
+    .geog-table thead th {
+      background: var(--primary);
+      color: #fff;
+      font-weight: 800;
+    }
+
+    .geog-app-iframe-wrapper {
+      background-color: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+    }
+
+    .geog-app-iframe-wrapper iframe {
+      width: 100%;
+      border: none;
+      min-height: calc(100vh - 200px);
+      display: block;
+    }
+
+    .cold-war-frame iframe {
+      width: 100%;
+      min-height: 720px;
+      height: calc(100vh - 280px);
+      border: 1px solid var(--border);
+      background: var(--surface);
+      border-radius: var(--radius-md);
+    }
+
+    /* --- RESPONSIVE --- */
+    @media (max-width: 900px) {
+      .page-grid {
+        grid-template-columns: 1fr;
+      }
+      .alras-sidebar {
+        border-right: none;
+        border-bottom: 1px solid var(--border);
+        flex-direction: row;
+        flex-wrap: wrap;
+        padding: 16px;
+      }
+      .sidebar-title {
+        width: 100%;
+        margin-bottom: 4px;
+      }
+      .alras-item {
+        flex: 1;
+        text-align: center;
+        justify-content: center;
+        border-left: none;
+        border-bottom: 3px solid transparent;
+      }
+      .alras-item.active {
+        border-left: none;
+        border-bottom-color: var(--primary);
+      }
+      .content-area {
+        padding: 24px 16px;
+      }
+      .letter-box {
+        width: 50px;
+        height: 50px;
+        font-size: 1.5rem;
+      }
+    }
+  </style>
+  <script src="main.js" type="text/javascript"></script>
+  <script src="flashcards.js"></script>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header>
+    <div class="brand">
+      <h1 id="header-title">HPCCSS 5B English ALRAS</h1>
+      <p>Academic Learning Resources Administration System</p>
+    </div>
+    <nav class="header-nav">
+      <button class="nav-btn primary" onclick="showLanding()">ALRAS Sections</button>
+      <button class="nav-btn" onclick="openWebsiteUpdates()">Website Updates</button>
+    </nav>
+  </header>
+
+  <!-- MAIN LAYOUT -->
+  <main>
+    <div class="page-grid">
+      <!-- SIDEBAR -->
+      <aside class="alras-sidebar">
+        <div class="sidebar-title">ALRAS Sections</div>
+        <button class="alras-item active" onclick="switchSubject('en-screen', 'HPCCSS 5B EN ALRAS', this)">EN ALRAS</button>
+        <button class="alras-item" onclick="switchSubject('hist-screen', 'HPCCSS 5B HIST ALRAS', this)">HIST ALRAS</button>
+        <button class="alras-item" onclick="switchSubject('geog-screen', 'HPCCSS 5B GEOG ALRAS', this)">GEOG ALRAS</button>
+        <button class="alras-item" onclick="switchSubject('chem-screen', 'HPCCSS 5B CHEM ALRAS', this)">CHEM ALRAS</button>
+      </aside>
+
+      <!-- CONTENT AREA -->
+      <div class="content-area">
+        
+        <!-- FLASHCARD APP -->
+        <section class="app-screen" id="flashcard-app">
+          <div class="app-header">
+            <div>
+              <h3>Generic Vocabulary Flashcards</h3>
+              <p class="muted-subtitle">Touch the card to flip and reveal definitions.</p>
+            </div>
+            <button class="back-btn" onclick="openApp('en-screen')">Back to EN ALRAS</button>
+          </div>
+
+          <div id="loading" style="padding: 40px; text-align: center;">Loading Vocabulary...</div>
+          <div id="app" class="hidden">
+            <div class="flashcard-container">
+              <div class="flashcard-wrapper">
+                <div class="flashcard" id="card" onclick="flipCard()">
+                  <div class="card-face card-front">
+                    <div class="vocab-word" id="vocab-display"></div>
+                    <div class="vocab-usage" id="usage-display"></div>
+                  </div>
+                  <div class="card-face card-back">
+                    <div class="vocab-meaning" id="meaning-display"></div>
+                    <div class="vocab-sentence" id="sentence-display"></div>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="flashcard-controls">
+                <button class="control-btn" onclick="prevCard()" id="prev-btn">Previous</button>
+                <span class="progress-text" id="progress-text"></span>
+                <button class="control-btn" onclick="nextCard()" id="next-btn">Next</button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- VOCABULARY SET CHALLENGE APP -->
+        <section class="app-screen" id="set-challenge-app">
+          <div class="app-header">
+            <div>
+              <h3>Vocabulary Set Challenge</h3>
+              <p class="muted-subtitle">A synonym set is chosen and one word is shown. Fill in the rest of the set with first-two-letter hints.</p>
+            </div>
+            <button class="back-btn" onclick="openApp('en-screen')">Back to EN ALRAS</button>
+          </div>
+
+          <div style="max-width: 600px; margin: 0 auto;">
+            <div style="background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 24px; margin-bottom: 24px;">
+              <div style="margin-bottom: 16px;"><strong style="color: var(--primary);">Set meaning:</strong> <span id="set-challenge-meaning"></span></div>
+              <div style="margin-bottom: 16px;"><strong style="color: var(--primary);">Given word:</strong> <span id="set-challenge-word"></span></div>
+              <div class="progress-text" id="set-challenge-attempts"></div>
+            </div>
+            
+            <div id="set-challenge-status" style="text-align: center; margin-bottom: 24px; font-weight: 500; color: var(--muted);"></div>
+            
+            <div id="set-challenge-inputs" style="margin-bottom: 24px;"></div>
+            
+            <div style="display: flex; gap: 12px; justify-content: center;">
+              <button class="nav-btn primary" id="set-challenge-submit" onclick="submitSetChallenge()">Submit Answers</button>
+              <button class="nav-btn secondary hidden" id="set-challenge-newset" onclick="startSetChallenge()">New Set</button>
+            </div>
+          </div>
+        </section>
+
+        <!-- DASHBOARD (LANDING) SCREEN -->
+        <section class="app-screen active" id="en-screen">
+          <div class="section-header">
+            <h2>English ALRAS</h2>
+            <p>Select an English learning tool from below.</p>
+          </div>
+          <div class="hero-grid">
+            <div class="feature-card">
+              <h3>Generic Vocabulary Flashcards</h3>
+              <p>Practice 50+ vocabulary words with meanings and example sentences.</p>
+              <button onclick="openFlashcards()">Open Flashcards</button>
+            </div>
+            <div class="feature-card">
+              <h3>Wordle Challenge</h3>
+              <p>Test your 5-letter vocabulary knowledge and spelling intuition.</p>
+              <button onclick="openWordle()">Play Wordle</button>
+            </div>
+            <div class="feature-card">
+              <h3>Vocabulary Set Challenge</h3>
+              <p>Fill in synonym sets using first-two-letter hints.</p>
+              <button onclick="openSetChallenge()">Take Challenge</button>
+            </div>
+          </div>
+        </section>
+
+        <section class="app-screen" id="hist-screen">
+          <div class="section-header">
+            <h2>History ALRAS</h2>
+            <p>Access your history notes and documents below.</p>
+          </div>
+          <div class="hero-grid">
+            <div class="feature-card">
+              <h3>Common Abbreviations</h3>
+              <p>Review historical abbreviations used in the HIST ALRAS section.</p>
+              <button onclick="openApp('history-table-app')">Open Abbreviations</button>
+            </div>
+            <div class="feature-card">
+              <h3>Cold War Notes</h3>
+              <p>Review the Cold War notes table.</p>
+              <button onclick="openApp('cold-war-app')">Open Cold War Notes</button>
+            </div>
+            <div class="feature-card">
+              <h3>Hong Kong History Notes</h3>
+              <p>Review the Hong Kong History notes table.</p>
+              <button onclick="openApp('hk-history-app')">Open HK History Notes</button>
+            </div>
+            <div class="feature-card">
+              <h3>Japan History Notes</h3>
+              <p>Review the Japan History notes table.</p>
+              <button onclick="openApp('jp-history-app')">Open Japan History Notes</button>
+            </div>
+          </div>
+        </section>
+
+        <section class="app-screen" id="geog-screen">
+          <div class="section-header">
+            <h2>Geography ALRAS</h2>
+            <p>Review geography notes and practice in GEOG ALRAS.</p>
+          </div>
+          <div class="hero-grid">
+            <div class="feature-card">
+              <h3>[C1] Plate Tectonics</h3>
+              <p>Plate tectonics: lithospheric plates, plate boundaries, and tectonic processes.</p>
+              <button onclick="openApp('geog-c1-app')">Open Plate Tectonics</button>
+            </div>
+            <div class="feature-card">
+              <h3>[C2] River and Coast</h3>
+              <p>River systems and coastal processes: fluvial erosion, deposition, and marine features.</p>
+              <button onclick="openApp('geog-c2-app')">Open River and Coast</button>
+            </div>
+            <div class="feature-card">
+              <h3>[C3] Industry</h3>
+              <p>Industrial geography: location factors, industrial systems, and economic impacts.</p>
+              <button onclick="openApp('geog-c3-app')">Open Industry</button>
+            </div>
+            <div class="feature-card">
+              <h3>[C5] Farming and Famine</h3>
+              <p>Agricultural systems and food security: farming practices and famine issues.</p>
+              <button onclick="openApp('geog-c5-app')">Open Farming and Famine</button>
+            </div>
+            <div class="feature-card">
+              <h3>[C6] Tropical Rainforests</h3>
+              <p>Rainforest ecosystems: biodiversity, climate, and human impacts.</p>
+              <button onclick="openApp('geog-c6-app')">Open Tropical Rainforests</button>
+            </div>
+            <div class="feature-card">
+              <h3>[C7] Climate Change</h3>
+              <p>Climate science and change: causes, impacts, and mitigation strategies.</p>
+              <button onclick="openApp('geog-c7-app')">Open Climate Change</button>
+            </div>
+            <div class="feature-card">
+              <h3>[E1] Dynamic Earth</h3>
+              <p>Dynamic Earth: types of rocks, formation, internal and external processes.</p>
+              <button onclick="openApp('geog-e1-app')">Open Dynamic Earth</button>
+            </div>
+          </div>
+        </section>
+
+        <section class="app-screen" id="chem-screen">
+          <div class="section-header">
+            <h2>Chemistry ALRAS</h2>
+            <p>Chemistry modules are currently under development.</p>
+          </div>
+        </section>
+
+        <!-- WEBSITE UPDATES SCREEN -->
+        <section class="app-screen" id="website-updates-app">
+          <div class="app-header">
+            <div>
+              <h3>Website Updates</h3>
+              <p class="muted-subtitle" style="color: var(--muted); font-size: 0.9rem;">Latest changes to the ALRAS platform.</p>
+            </div>
+            <button class="back-btn" onclick="openApp('en-screen')">Back to EN ALRAS</button>
+          </div>
+          
+          <div class="history-table">
+            <table>
+              <thead>
+                <tr><th>Update</th><th>Date</th><th>Description</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>UI Layout Update</td>
+                  <td>Today</td>
+                  <td>Transitioned to a professional dark mode interface and fixed navigation routing issues.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+        
+        <!-- GEOGRAPHY APPS -->
+        <section class="app-screen" id="geog-c1-app">
+          <div class="app-header">
+            <div>
+              <h3>[C1] Plate Tectonics</h3>
+              <p class="muted-subtitle">Plate Tectonics: lithospheric plates, plate boundaries, and tectonic processes.</p>
+            </div>
+            <button class="back-btn" onclick="openApp('geog-screen')">Back to GEOG ALRAS</button>
+          </div>
+
+          <div class="history-table">
+            <iframe src="geogc1.html" style="width: 100%; min-height: 600px; border: none; background: var(--surface); border-radius: var(--radius-md);"></iframe>
+          </div>
+        </section>
+
+        <section class="app-screen" id="geog-c2-app">
+          <div class="app-header">
+            <div>
+              <h3>[C2] River and Coast</h3>
+              <p class="muted-subtitle">River systems and coastal processes: fluvial erosion, deposition, and marine features.</p>
+            </div>
+            <button class="back-btn" onclick="openApp('geog-screen')">Back to GEOG ALRAS</button>
+          </div>
+
+          <div class="history-table">
+            <iframe src="geogc2.html" style="width: 100%; min-height: 600px; border: none; background: var(--surface); border-radius: var(--radius-md);"></iframe>
+          </div>
+        </section>
+
+        <section class="app-screen" id="geog-c3-app">
+          <div class="app-header">
+            <div>
+              <h3>[C3] Industry</h3>
+              <p class="muted-subtitle">Industrial geography: location factors, industrial systems, and economic impacts.</p>
+            </div>
+            <button class="back-btn" onclick="openApp('geog-screen')">Back to GEOG ALRAS</button>
+          </div>
+
+          <div class="history-table">
+            <iframe src="geogc3.html" style="width: 100%; min-height: 600px; border: none; background: var(--surface); border-radius: var(--radius-md);"></iframe>
+          </div>
+        </section>
+
+        <section class="app-screen" id="geog-c5-app">
+          <div class="app-header">
+            <div>
+              <h3>[C5] Farming and Famine</h3>
+              <p class="muted-subtitle">Agricultural systems and food security: farming practices and famine issues.</p>
+            </div>
+            <button class="back-btn" onclick="openApp('geog-screen')">Back to GEOG ALRAS</button>
+          </div>
+
+          <div class="history-table">
+            <iframe src="geogc5.html" style="width: 100%; min-height: 600px; border: none; background: var(--surface); border-radius: var(--radius-md);"></iframe>
+          </div>
+        </section>
+
+        <section class="app-screen" id="geog-c6-app">
+          <div class="app-header">
+            <div>
+              <h3>[C6] Tropical Rainforests</h3>
+              <p class="muted-subtitle">Rainforest ecosystems: biodiversity, climate, and human impacts.</p>
+            </div>
+            <button class="back-btn" onclick="openApp('geog-screen')">Back to GEOG ALRAS</button>
+          </div>
+
+          <div class="history-table">
+            <iframe src="geogc6.html" style="width: 100%; min-height: 600px; border: none; background: var(--surface); border-radius: var(--radius-md);"></iframe>
+          </div>
+        </section>
+
+        <section class="app-screen" id="geog-c7-app">
+          <div class="app-header">
+            <div>
+              <h3>[C7] Climate Change</h3>
+              <p class="muted-subtitle">Climate science and change: causes, impacts, and mitigation strategies.</p>
+            </div>
+            <button class="back-btn" onclick="openApp('geog-screen')">Back to GEOG ALRAS</button>
+          </div>
+
+          <div class="history-table">
+            <iframe src="geogc7.html" style="width: 100%; min-height: 600px; border: none; background: var(--surface); border-radius: var(--radius-md);"></iframe>
+          </div>
+        </section>
+
+        <section class="app-screen" id="geog-e1-app">
+          <div class="app-header">
+            <div>
+              <h3>[E1] Dynamic Earth</h3>
+              <p class="muted-subtitle">Dynamic Earth: types of rocks, formation, internal and external processes.</p>
+            </div>
+            <button class="back-btn" onclick="openApp('geog-screen')">Back to GEOG ALRAS</button>
+          </div>
+
+          <div class="history-table">
+            <iframe src="geoge1.html" style="width: 100%; min-height: 600px; border: none; background: var(--surface); border-radius: var(--radius-md);"></iframe>
+          </div>
+        </section>
+
+          <section class="app-screen" id="history-table-app">
+          <div class="app-header">
+            <div>
+              <h3>Common Abbreviations</h3>
+              <p class="muted-subtitle">Open this table to review historical abbreviations used in the HIST ALRAS section.</p>
+            </div>
+            <button class="back-btn" onclick="openApp('hist-screen')">Back to HIST ALRAS</button>
+          </div>
+
+          <div class="history-table">
+            <table>
+              <thead>
+                <tr><th>Type</th><th>Code</th><th>Meaning</th></tr>
+              </thead>
+              <tbody>
+                <tr><td rowspan="4">Region</td><td>EE</td><td>Eastern Europe</td></tr>
+                <tr><td>CE</td><td>Central Europe</td></tr>
+                <tr><td>WE</td><td>Western Europe</td></tr>
+                <tr><td>ME</td><td>Middle East</td></tr>
+                <tr><td rowspan="12">Country</td><td>USSR</td><td>Union of Soviet Socialist Republics</td></tr>
+                <tr><td>US</td><td>United States (of America)</td></tr>
+                <tr><td>BR</td><td>Britain</td></tr>
+                <tr><td>FR</td><td>France</td></tr>
+                <tr><td>SROV</td><td>Socialist Republic of Vietnam</td></tr>
+                <tr><td>GER</td><td>Germany</td></tr>
+                <tr><td>EGER</td><td>East Germany</td></tr>
+                <tr><td>WGER</td><td>West Germany</td></tr>     
+                <tr><td>CZE</td><td>Czechoslovakia</td></tr>
+                <tr><td>DPRK</td><td>Democratic People’s Republic of Korea</td></tr>
+                <tr><td>ROK</td><td>Republic of Korea</td></tr>
+                <tr><td>PRC</td><td>People’s Republic of China</td></tr>
+                <tr><td>Policy</td><td>CP</td><td>Containment Policy</td></tr>
+                <tr><td rowspan="6">Politics</td><td>POTUS</td><td>President of the United States</td></tr>
+                <tr><td>VPOTUS</td><td>Vice President of the United States</td></tr>
+                <tr><td>PM</td><td>Prime Minister</td></tr>
+                <tr><td>KMT</td><td>Kuomintang</td></tr>
+                <tr><td>CCP</td><td>Chinese Communist Party</td></tr>
+                <tr><td>UN</td><td>United Nations</td></tr>
+                <tr><td rowspan="2">Military</td><td>ICBM</td><td>Intercontinental ballistic missiles</td></tr>
+                <tr><td>MAD</td><td>Mutual assured destruction</td></tr>
+              </tbody>       
+            </table>
+          </div>
+        </section>
+
+          <section class="app-screen" id="cold-war-app">
+          <div class="app-header">
+            <div>
+              <h3>Cold War Notes</h3>
+              <p class="muted-subtitle">Review the HIST ALRAS Cold War notes table taken from the course reference file.</p>
+            </div>
+            <button class="back-btn" onclick="openApp('hist-screen')">Back to HIST ALRAS</button>
+          </div>
+
+          <h4>Characteristics of Cold War</h4>
+          <div class="history-table">
+            <table>
+              <thead>
+                <tr>
+                  <th>Type</th>
+                  <th>Name</th>
+                  <th>Description</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td rowspan="9">Characteristic</td>
+                  <td>Economic rivalry</td>
+                  <td>US (representative of the capitalist bloc) - Marshall Plan → aid WE → containment policy and ease communism spread<br><br>USSR (representative of the communist bloc) - Molotov Plan → aid EE<br><br>Impact - Intense hostilities</td>
+                </tr>
+                <tr>
+                  <td>Military rivalry (forming opposing military organizations)</td>
+                  <td>WE - NATO<br><br>EE - Warsaw Pact</td>
+                </tr>
+                <tr>
+                  <td>Armaments race</td>
+                  <td>US - (WWII) Developed atomic bombs (Hiroshima + Nagasaki)<br><br>USSR - (1949) Developed atomic bombs<br><br>Common - (1953) Developed thermonuclear weapons + intercontinental ballistic missiles (ICBM) + built missile bases<br>Impact - Rise in military expenditures + great threats to world peace + intense hostilities</td>
+                </tr>
+                <tr>
+                  <td>Space race</td>
+                  <td>US - (1958) Launched first satellite (Explorer 1)<br><br>USSR - (1957) Launched first satellite (Sputnik 1)<br><br>Impact - Rise in space exploration expenditures + intense hostilities</td>
+                </tr>
+                <tr>
+                  <td>Regional conflicts (proxy wars)</td>
+                  <td>Definition - Not direct wars between US and USSR, but conflicts in different regions representing the two blocs<br><br>(1946-1949) Greek Civil War<br>(1946-1949) Chinese Civil War<br>(1950-1953) Korean War<br>(1961-1975) Vietnam War<br><br>Impact - Intense hostilities + worsened regional problems</td>
+                </tr>
+                <tr>
+                  <td>Spying activities</td>
+                  <td>US - Central Intelligence Agency (CIA)<br>USSR - Committee of State Security (KGB)<br><br>(1960) U-2 Incident</td>
+                </tr>
+                <tr>
+                  <td>Stopping all kinds of communication</td>
+                  <td>Definition - Termination of trade and cultural exchanges between capitalist and communist blocs<br><br>(1980) US boycott of Moscow Olympics<br>(1984) USSR boycott of Los Angeles Olympics<br><br>Impact - WE and EE have no contact → intense hostilities</td>
+                </tr>
+                <tr>
+                  <td>Rivalry in propaganda</td>
+                  <td>Definition - Two blocs promote their own political ideas and attacked the counterpart<br><br>(1946) Iron Curtain Speech<br>(1957) USSR radio announcement on successful launch of Sputnik 1</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h4>(1945-1953) Stalin Period / End of WWII</h4>
+          <div class="history-table">
+            <table>
+              <thead>
+                <tr>
+                  <th>Type</th>
+                  <th>Year</th>
+                  <th>Name</th>
+                  <th>Description</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td rowspan="2">Foreign policy</td>
+                  <td>1945-1965</td>
+                  <td>Containment Policy</td>
+                  <td>Ease the spread of communism → intense hostilities</td>
+                </tr>
+                <tr>
+                  <td>1947</td>
+                  <td>Truman Doctrine</td>
+                  <td>Greek Civil War → Truman requested Congress to provide USD $400M to support Turkey and Greek → ease the spread of communism → intense hostilities</td>
+                </tr>
+                <tr>
+                  <td rowspan="6">Event</td>
+                  <td>1946-1949</td>
+                  <td>Chinese Civil War</td>
+                  <td>Course - US supported KMT → contain communism in Asia → KMT retreated to Taiwan → (1949) PRC established → new communist regime<br><br>Impact - US worried about communism spread to Asia → provided resources and USN 7th Fleet to KMT until KMT quit UN → containment policy<br>- PRC established → Sino-Soviet relationship enhanced → communist cooperation</td>
+                </tr>
+                <tr>
+                  <td>1946</td>
+                  <td>Iron Curtain Speech</td>
+                  <td>Background - USSR communism promotion in EE → more USSR satellite states + expansion into Turkey, Greece, Iran<br><br>Course - BR PM Winston Churchill criticized USSR for violating Yalta Conference → (March 1946) speech in US → imagined "Iron Curtain" along CE and EE to block WE communication + US should cooperate with WE to resist USSR expansions → USSR responded regimes in EE are for national safety only<br><br>Impact - Truman adopted CP against USSR → intense hostilities</td>
+                </tr>
+                <tr>
+                  <td>1947</td>
+                  <td>Marshall Plan and Molotov Plan</td>
+                  <td>Background - Ease communism spread<br><br>Course - Truman proposed Marshall Plan + USSR proposed Molotov Plan as a response → USSR did not allow Molotov Plan countries to trade with WE<br><br>Impact - Slower communism spread → econ rivalry → intense hostilities between two econ blocs</td>
+                </tr>
+                <tr>
+                  <td>1948-1949</td>
+                  <td>Berlin Crisis</td>
+                  <td>Background - Yalta Conference + Potsdam Conference → GER divided into four zones (US, BR, FR, USSR) → USSR wanted to weaken GER + US, BR, FR wanted to recover GER → US, BR, FR trizonia → protested by USSR → GER divided into WGER, EGER<br><br>Course - Allowed WGER to join Marshall Plan → USSR cut all land routes from East Berlin to WGER → USSR provided airlift to provide food, oil, daily supplies to East Berlin + BR stopped coal and steel supply to EGER + US sent B29 to BR → (1949) NATO formed → NATO Article 5 → USSR softened attitude and lifted blockade<br><br>Impact - Split GER into WGER and EGER until 1990 reunification<br>Led to Berlin Wall → stopping all kinds of communication<br>WE aligned with US to balance power → formation of NATO → military rivalry</td>
+                </tr>
+                <tr>
+                  <td>1949</td>
+                  <td>Formation of NATO</td>
+                  <td>Background - Berlin Crisis → US needed long-term military alliance<br><br>Course - 12 countries formed NATO to military support and resist communism<br><br>Impact - US-USSR military confrontation → military rivalry<br>US abandoned isolationism → started involving in international affairs<br>Led to Warsaw Pact + enhanced arms race → invention of nuclear weapons → might have led to end of the world</td>
+                </tr>
+                <tr>
+                  <td>1950-1953</td>
+                  <td>Korean War</td>
+                  <td>Background - Korea Empire was a colony of Japan → WWII Japan surrender → divided Korean Peninsula into DPRK and ROK at 38th Parallel<br><br>Course - Kim Il-sung ambition to unify Korean Peninsula → DPRK Army crossed 38th Parallel → occupied Seoul → UN troops sent led by Gen. MacArthur → DPRK retreated to near PRC border → PRC sent volunteer army → UN troops retreated → stalemate along 38th Parallel → DPRK signed cease fire<br><br>Impact - USSR attended every UN meeting → one-vote veto system → UN meetings became power struggles between USSR and US → UN not effective → use of military organizations → military rivalry<br>US sent 7th Fleet to protect KMT → US rearm → allowed rearm and entry to NATO of WGER → CP</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h4>(1953-1964) Khrushchev Period</h4>
+          <div class="history-table">
+            <table>
+              <thead>
+                <tr>
+                  <th>Type</th>
+                  <th>Year</th>
+                  <th>Name</th>
+                  <th>Description</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td rowspan="3">Foreign policy</td>
+                  <td>1945-1965</td>
+                  <td>Containment Policy</td>
+                  <td>Ease the spread of communism → intense hostilities</td>
+                </tr>
+                <tr>
+                  <td>1953-1961</td>
+                  <td>Eisenhower Doctrine</td>
+                  <td>If any ME countries get "invasion from communism", they can request econ/military assistance from US + UN is not reliable → Eisenhower requested Congress to use US Armed Forces for protecting ME when needed → CP</td>
+                </tr>
+                <tr>
+                  <td>1961-1963</td>
+                  <td>Kennedy Doctrine</td>
+                  <td>Supported CP → actively contained communism</td>
+                </tr>
+                <tr>
+                  <td rowspan="6">Event</td>
+                  <td>1955</td>
+                  <td>Warsaw Pact</td>
+                  <td>Background - WGER entered NATO → threatened communist bloc in EE<br><br>Course - USSR established Warsaw Pact with 8 countries + established an article that is similar to NATO's article 5<br><br>Impact - Military rivalry → EE, WE split into two military camps → enhanced arms race + slower GER reunification</td>
+                </tr>
+                <tr>
+                  <td>1959</td>
+                  <td>Exchange and Paris Summit</td>
+                  <td>Course - VPOTUS Nixon visited Moscow → promoted US products to USSR + Khrushchev visited Washington<br><br>Impact - US, USSR, BR, FR planned Paris Summit to settle disputes peacefully (nuclear disarm + GER problems) → attempt of comms → suspended due to U2 Incident</td>
+                </tr>
+                <tr>
+                  <td>1960</td>
+                  <td>U-2 Incident</td>
+                  <td>Course - US spy plane shot down in Russia → Eisenhower denied intelligence activities (said plane was weather research aircraft) → USSR revealed plane and pilot found → Eisenhower admitted → USSR demanded apology → Eisenhower refused → USSR withdrew from Paris Summit<br><br>Impact - Spying activities → end of US-USSR relations improvement → worsened relationship</td>
+                </tr>
+                <tr>
+                  <td>1961</td>
+                  <td>Berlin Wall</td>
+                  <td>Course - US helped WGER econ → recovered rapidly + EGER econ depression → 2.1M ppl (many workers, professionals) looked for shelter in WGER → EGER ppl escaped to WGER → WE refused to withdraw from Berlin → USSR built Berlin Wall, watchtowers to prevent escape<br><br>Impact - US increase in military expenditure to support West Berlin + USSR ended nuclear test agreement → nuclear race</td>
+                </tr>
+                <tr>
+                  <td>1961-1975</td>
+                  <td>Vietnam War</td>
+                  <td>Background - Vietnam was occupied by Japan → WWII Japan surrender → (1954) Vietnam independence → divided into north (communist), south (capitalist) in 17th Parallel → south refused to unify → started eliminating communists in south (supported by US because Domino Theory)<br><br>Course - South resisted with US forces → US retreat → North Vietnam triumph<br><br>Impact - (1976) SROV founded (communist) + US high expenditure and massacre → TV more common in US → shown on TV → more US civilian anti-war (against CP) → internal pressure → abandon of CP</td>
+                </tr>
+                <tr>
+                  <td>1962</td>
+                  <td>Cuban Missile Crisis</td>
+                  <td>Background - Cuba pro-US → Castro revolution → Cuba pro-USSR → US cut diplomacy with Cuba + JFK support of Castro overthrow → Cuba became communist → closer to USSR + US concerned of national security, communism spread to Central, South America<br><br>Course - US missile bases in Turkey and Italy → USSR missile bases in Cuba to counter → JFK imposed naval blockade on Cuba → warned USSR to remove Cuba missile bases → Khrushchev, JFK agreement to remove missile bases → US lifted blockade → promised not to invade Cuba → removed missile bases in Turkey<br><br>Impact - Moscow-Washington hotline, Partial Nuclear Test Ban Treaty → attempts of comms → improved relations<br>USSR thought Khrushchev weak → USSR coup → change in leadership<br>USSR demanded Cuba confront → USSR demanded Cuba compromise → PRC discontent → Sino-Soviet relations worsened</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h4>(1965-1979) Detente</h4>
+          <div class="history-table">
+            <table>
+              <thead>
+                <tr>
+                  <th>Type</th>
+                  <th>Name</th>
+                  <th>Description</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td rowspan="5">Reason for Detente</td>
+                  <td>Huge cost of armaments race</td>
+                  <td>Development and tests of nuclear arms (ie. hydrogen bombs, ICBM, TNT) → (US) USD $14.5B to $75.4B + (USSR) USD $15.5B to $80.9B (1950-1967) → both sides wanted lessen burden + raise people's living standards → wanted restrict arms race</td>
+                </tr>
+                <tr>
+                  <td>Fear of nuclear war</td>
+                  <td>USSR Sputnik capable of launching ICBM to US + US deployed strategic missile forces + Cuban Missile Crisis → MAD → both sides wanted prevent nuclear war → reduced tension to negotiate</td>
+                </tr>
+                <tr>
+                  <td>Internal pressure</td>
+                  <td>Vietnam War → anti-war wave → Nixon abandoned Truman Doctrine and adopted Nixon Doctrine<br>USSR internal problems (ie. econ development, living standards) → wanted national construction by expanding trade and exchange in tech with West</td>
+                </tr>
+                <tr>
+                  <td>Sino-Soviet split</td>
+                  <td>(1958) Khrushchev criticized PRC's Great Leap Forward + CCP opposed Khrushchev's criticism of Stalin + (1969) Zhenbao Island conflict → intense relations between PRC and USSR → reduced communist threat to US + CPC and USSR scared of isolation → both wanted better relations with US → indirect help of improving US-USSR relations</td>
+                </tr>
+                <tr>
+                  <td>Rise of Richard Nixon</td>
+                  <td>(1969) Nixon became POTUS → Nixon Doctrine to reduce conflicts with USSR + nuclear umbrella → limited nuclear proliferation → SALT → reduced tension</td>
+                </tr>
+                <tr>
+                  <td rowspan="2">Foreign policy</td>
+                  <td>Nixon Doctrine</td>
+                  <td rowspan="2">US only provided military and econ support → less intervention to allies defenses → reduced tension<br><br>Nuclear umbrella → provided nuclear protection to allies → limited nuclear proliferation + alliances stability → reduced nuclear race</td>
+                </tr>
+                <tr>
+                  <td>Gerald Ford Doctrine</td>
+                </tr>
+                <tr>
+                  <td rowspan="7">Event</td>
+                  <td>Signing of nuclear treaties</td>
+                  <td>(1963) Partial Nuclear Test Ban Treaty<br>(1968) Non-Proliferation of Nuclear Weapons<br>→ attempts of comms</td>
+                </tr>
+                <tr>
+                  <td>Strategic Arms Limitation Treaties</td>
+                  <td>(1972) SALT I signed → attempt of disarm and comms<br>(1979) SALT II signed → failed due to Soviet-Afghan War → regional conflicts caused no comms</td>
+                </tr>
+                <tr>
+                  <td>Exchange visits</td>
+                  <td>(1972) Nixon visited Moscow<br>(1973) Brezhnev visited Washington<br>→ US agreed export oil rigs and wheat to USSR + USSR promised pressurize North Vietnam ceasefire<br>→ attempts of comms → reduced tension</td>
+                </tr>
+                <tr>
+                  <td>Negotiation on German problems</td>
+                  <td>(1972) US, BR, FR, USSR signed Quadripartite Agreement → attempts of comms<br>(1973) WGER, EGER joined UN together → reduced tension between two blocs → reduced military rivalry</td>
+                </tr>
+                <tr>
+                  <td>Helsinki Agreement</td>
+                  <td>NATO, Warsaw Pact met at Conference on Security and Co-operation in Europe (CSCE) → signed Helsinki Agreement → WE recognized boundary of EE + EE promised give basic human rights to EE people → attempts of comms tension greatly relieved</td>
+                </tr>
+                <tr>
+                  <td>Enhancing econ ties</td>
+                  <td>(1969) US Export Administration Act → loosened restrictions on exports to USSR + approved large-scale trade with USSR → (1970-1975) Increased US-USSR trade (USD $200M to $2B) → reduced econ rivalry + attempts of comms</td>
+                </tr>
+                <tr>
+                  <td>Space cooperation</td>
+                  <td>(US) Apollo 18 and (USSR) Soyuz 19 docked in space, carried out joint experiments → end of space race + attempt of comms</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h4>(1979-1985) End of Detente</h4>
+          <div class="history-table">
+            <table>
+              <thead>
+                <tr>
+                  <th>Type</th>
+                  <th>Year</th>
+                  <th>Name</th>
+                  <th>Description</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Foreign policy</td>
+                  <td>1981-1989</td>
+                  <td>Reagan Doctrine</td>
+                  <td>Abandoned Nixon, Ford Doctrines + communism rollback → supported regions overthrow communist regimes → increased hostilities, regional conflicts<br><br>Increased military expenditure → enhanced arms race</td>
+                </tr>
+                <tr>
+                  <td rowspan="3">Event</td>
+                  <td>1979</td>
+                  <td>Soviet invasion of Afghanistan</td>
+                  <td>Course - US helped overthrow pro-Soviet regime in Afghan → USSR worried control loss → sent troops to Afghan → Persian Gulf region major oil supply → US demanded USSR withdraw → USSR refused<br><br>Impact - Failure of SALT II + Olympics boycotts + worse USSR econ → part of USSR dissolution → end of Cold War</td>
+                </tr>
+                <tr>
+                  <td>1981</td>
+                  <td>Suppression of Polish Solidarity</td>
+                  <td>Course - Solidarity was trade union of Poland workers → fought for rights of workers → USSR and Poland suppressed, martial law → US limited trade<br><br>Impact - gained independence → USSR suppression → worse USSR image<br>Reagan was POTUS → Reagan Doctrine → failure of communism rollback → tensed US-USSR relations</td>
+                </tr>
+                <tr>
+                  <td>1983</td>
+                  <td>Strategic Defense Initiative</td>
+                  <td>USSR stronger nuclear weapons → Reagan imposed SDI → restart of space race→ support regions overthrow communist regimes</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h4>(1985-1991) End of Cold War</h4>
+          <div class="history-table">
+            <table>
+              <thead>
+                <tr>
+                  <th>Type</th>
+                  <th>Year</th>
+                  <th>Name</th>
+                  <th>Description</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Foreign policy</td>
+                  <td>1985-1991</td>
+                  <td>Sinatra Doctrine</td>
+                  <td>Gorbachev became USSR leader<br>→ EE autonomy → could move away from USSR control → gained independence<br><br>Non-intervention on EE → no military force for maintain USSR influence<br><br>Support of reform in USSR (econ and political)</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section class="app-screen" id="hk-history-app">
+          <div class="app-header">
+            <div>
+              <h3>Hong Kong History Notes</h3>
+              <p class="muted-subtitle">Hong Kong History between 1900 ~ 2000 according to history lesson notes.</p>
+            </div>
+            <button class="back-btn" onclick="openApp('hist-screen')">Back to HIST ALRAS</button>
+          </div>
+          <h4>Abbreviations / Meanings</h4>
+          <div class="history-table">
+            <table>
+              <thead>
+                <tr>
+                  <th>Type</th>
+                  <th>Code</th>
+                  <th>Meaning</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><td rowspan="4">Region</td><td>SEA</td><td>Southeast Asia</td></tr>
+                <tr><td>CWB</td><td>Causeway Bay</td></tr>
+                <tr><td>HK</td><td>Hong Kong</td></tr>
+                <tr><td>US</td><td>United States</td></tr>
+                <tr><td rowspan="6">Country</td><td>UK</td><td>United Kingdom</td></tr>
+                <tr><td>JP</td><td>Japan</td></tr>
+                <tr><td>ROC</td><td>Republic of China</td></tr>
+                <tr><td>CN</td><td>Chinese</td></tr>
+                <tr><td>EN</td><td>English</td></tr>
+                <tr><td>BR</td><td>Britain</td></tr>
+                <tr><td rowspan="5">Politics // Policies // Military</td><td>ExCo</td><td>Executive Council</td></tr>
+                <tr><td>LegCo</td><td>Legislative Council</td></tr>
+                <tr><td>PoW</td><td>Prisoners of War</td></tr>
+                <tr><td>KMT</td><td>Kuomintang</td></tr>
+                <tr><td>GLF</td><td>Great Leap Forward</td></tr>
+                <tr><td rowspan="2">Other</td><td>R/O</td><td>Reform and Opening up</td></tr>
+                <tr><td>CN</td><td>Chinese</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <br>
+          <h4>(1850~1950) Chinese Influencers in Hong Kong</h4>
+          <div class="history-table">
+            <table>
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Description</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td rowspan="5">Sir Robert Bosman Hotung 何東爵士</td> 
+                  <tr><td>Eurasian race → identified himself as Chinese</td></tr>
+                  <tr><td>Graduated in Central College (Queens' College) (Dr. Sun's alma mater) → bilingual (CN+EN)</td></tr>
+                  <tr><td>1st CN to live on the Peak</td></tr>
+                  <tr><td>Diverse businessman → close connection with CN reformers</td></tr>
+                </tr>
+                <tr>
+                  <td rowspan="5">Wu Tingfang 伍廷芳 / Ng Choy 伍才</td>
+                  <tr><td>Graduated in St. Paul College</td></tr>
+                  <tr><td>1st CN barrister + 1st unofficial LegCo member</td></tr>
+                  <tr><td>ROC foreign minister + Qing second class official → drafted and negotiated treaties</td></tr> 
+                  <tr><td>Sir Kai Ho = brother-in-law</td></tr>
+                </tr>
+                <tr>
+                  <td rowspan="6">Sir Kai Ho 何啟爵士</td>
+                  <tr><td>Educated in Central College abroad → became both lawyer and doctor + bilingual (fluent in CN+EN)</td></tr>
+                  <tr><td>Became unofficial member in LegCo → cannot vote</td></tr>
+                  <tr><td>Tried to protect CN interests // business partner with foreigners → sometimes sided with westerners</td></tr>
+                  <tr><td>Not accepted into CN clubs + westernized → identity = stuck in middle</td></tr>
+                  <tr><td>Awarded knighthood → became Sir Kai Ho</td></tr>
+                </tr>
+                <tr>
+                  <td rowspan="5">Ma Ying-piu 馬應彪</td>
+                  <tr><td>stablished 1st HK department store (Sincere Department Store)</td></tr>
+                  <tr><td>Family moved to Australia → learned new business model → from grocery to department store → 1st price-tagged imported department stores to HK</td></tr>
+                  <tr><td>Counters to serve customers → 1st store to hire women sales // rooftop = playground + 1st building to have lift</td></tr>
+                  <tr><td>Supported revolutionaries against Qing → helped in fundraising + supplies</td></tr>
+                </tr>
+                <tr>
+                  <td rowspan="4">Lee Leung Yik 利良奕 / Lee Hysan 利希慎</td>
+                  <tr><td>Part of the Lee clan</td></tr>
+                  <tr><td>Participated in opium trading (dark history)</td></tr>
+                  <tr><td>Post-war HK → Jardine sold CWB to Lee family → Lee built properties in CWB → became land owner</td></tr>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <br>
+          <h4>(Pre-WWII) Hong Kong Modernization</h4>
+          <div class="history-table">
+            <table>
+              <thead>
+                <tr>
+                  <th>Aspect</th>
+                  <th>Description</th>
+                  <th>Explanation</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td rowspan="4">Characteristics</td>
+                  <td>Diversified industry</td><td>Swire dockyard (Royal Navy repair) // Whampoa dockyard (heavy industry) // sugar production // soda manufacturing (retailing)</td>
+                </tr>
+                <tr>
+                  <td>Transportation hub</td><td>Steamships // railways (KCR) // aviation (Kai Tak Airport)</td>
+                </tr>
+                <tr>
+                  <td>Western education</td><td>Originally CN+EN → system changed to EN+science+math → tertiary education (HKU)</td>
+                </tr>
+                <tr>
+                  <td>Business branches</td><td>Stores like Sincere had different branches (HK // Shanghai branches)</td>
+                </tr>
+                <tr>
+                  <td rowspan="5">Factors</td>
+                  <tr><td>Excellent geographical location</td><td>HK near South China Sea and Western Pacific Ocean → easy access to mainland and Pacific region → became trading hub // deep-water harbor</td></tr>
+                  <tr><td>Free port policy</td><td>UK declared HK free trading port → ships from any countries could enter // no taxes for entering // no tariffs for any imported goods</td></tr>
+                  <tr><td>Comprehensive infrastructure</td><td>Warehouses and piers near Victoria Harbor // Taikoo and Whampoa dockyards // Transportation: KCR + Kai Tak Airport</td></tr>
+                  <tr><td>Sufficient capital</td><td>Chartered Bank + HK Shanghai Banking → provided loans + financing + insurances + trades + investments → capital for entrepot trade</td></tr>
+                </tr>
+                <tr>
+                  <td rowspan="6">Contributions to Asia</td>
+                  <tr><td>Spread of business</td><td>HK introduced first dept store → spread to SEA // Nam Pak Hong branches in mainland China + SEA → conduct trade of Nam Pak products + remittance // Jardine Matheson → conduct trade between HK and SEA
+                    <tr><td>Revolutionary base</td><td>Ma Ying-piu donated money to Dr Sun → 1911 revolution → overthrow Qing dynasty → establish republic → promoted democracy / equality + provided shelters for reformers (educated in HK // western education → democratic ideas)
+                    <tr><td>Gender equality</td><td>Women's employment → first to hire women workers (fashion show // cosmetician)
+                    <tr><td>Western education of women</td><td>Central college / QC // Ying Wah Girl's School // Bellio's Public School → founding of HKU → foster education of talents → contributed to development of PRC
+                    <tr><td>Freedom of religion</td><td>Promoted Christianity to HK // neighbouring regions through business</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <br>
+          <h4>Imperial Japanese Occupation of Hong Kong</h4>
+          <div class="history-table">
+            <table>
+              <thead>
+                <tr>
+                  <th>Ruling</th>
+                  <th>Description</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Military rule</td>
+                  <td>Martial law + no separation of powers representation → rule by violence // terror → executions + interment camps</td>
+                </tr>
+                <tr>
+                  <td>Indirect rule</td>
+                  <td>Use CN to govern CN / foreigner PoW → used as bargaining chips during war</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <br>
+          <h4> Governor Sir Mark Young</h4>
+          <div class="history-table">
+            <table>
+              <thead>
+                <tr>
+                  <th>Governor</th>
+                  <th>Description</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Sir Mark Young 楊慕琦爵士</td>
+                  <td>Defeated by JP → low reputation / unpopular → CN did not respect him</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="history-table">
+            <table>
+              <thead>
+                <tr>
+                  <th>Young Plan</th>
+                  <th>Description</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Description</td>
+                  <td>Establishment of Municipal Council for Chinese to vote → democratization // representation of CN // internal affairs → appease the CN → lessen negativity against UK colonial rule</td>
+                </tr>
+                <tr>
+                  <td rowspan="4">Factors of failure</td>
+                  <tr><td>Independence movements</td></tr>
+                  <tr><td>Chiang Kai-shek assumed he would resume the role of controlling CN</td></tr>
+                  <tr><td>President Roosevelt insisted colonialism had to end → promised Soong Mei-ling to restore HK to CN control</td></tr>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <br>
+          <h4>(Post-WWII) Economic Development of Hong Kong</h4>
+          <div class="history-table">
+            <table>
+              <thead>
+                <tr>
+                  <th>Factor</th>
+                  <th>Reason</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td rowspan="4">Internal</td>
+                  <tr><td>Trade network from entrepot trade</td></tr>
+                  <tr><td>Dockyard infrastructures // airport // railways</td></tr>
+                  <tr><td>HK remained as a free trading port → low tax</td></tr>
+                </tr>
+                <tr>
+                  <td rowspan="4">External</td>
+                  <tr><td>Embargoes → decline of entrepot → rise of HK manufacturing + light industry → textile // plastics</td></tr>
+                  <tr><td>Larger labor force → cheap wages</td></tr>
+                  <tr><td>Tech + skills + management skills + capital + investments from Shanghai</td></tr>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <br>
+          <h4>(Post-WWII) Success of Vitasoy</h4>
+          <div class="history-table">
+            <table>
+              <thead>
+                <tr>
+                  <th>Factor</th>
+                  <th>Reason</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td rowspan="11">Internal</td>
+                  <tr><td>Tech advancement → pasteurization</td></tr>
+                  <tr><td>Transportation → roads // highways // ports // railways // airport</td></tr>
+                  <tr><td>Tech → automation // machinaries</td></tr>
+                  <tr><td>Government promoting local brands through HKBPE</td></tr>
+                  <tr><td>HK products were cheaper and of higher quality</td></tr>
+                  <tr><td>Foundation from entrepot trade → network + infrastructures</td></tr>
+                  <tr><td>Government policies → positive non-intervention → low tax rate + free foreign exchange → foreign direct investment</td></tr>
+                  <tr><td>Trade organizations → HKTDC + HKPC</td></tr>
+                  <tr><td>Polytechnic College → skilled labor</td></tr>
+                  <tr><td>Rising of middle class → consumerism</td></tr>
+                </tr>
+                <tr>
+                  <td rowspan="7">External</td>
+                  <tr><td>Expansion in Asia outside of HK</td></tr>
+                  <tr><td>Decline of entrepot trade → US + UN embargoes against PRC during Korean War</td></tr>
+                  <tr><td>Began to manufacture + export local products overseas</td></tr>
+                  <tr><td>Labor → mainland refugees from PRC → low cost // skilled labor</td></tr>
+                  <tr><td>Brought capital + tech + management skills</td></tr>
+                  <tr><td>Few competitions in Asia</td></tr>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <br>
+          <h4>(Post-1970s) Economic Restructuring of Hong Kong</h4>
+          <div class="history-table">
+            <table>
+              <thead>
+                <tr>
+                  <th>Revival of entrepot trade</th>
+                  <th>Reason</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td rowspan="4">Internal</td>
+                  <tr><td>Factories relocated to mainland → R/O → lower production cost</td></tr>
+                  <tr><td>HK lacked raw materials → less competitive compared to SEA / mainland</td></tr>
+                  <tr><td>Revival of entrepot → low tariffs + deep sea port → largest container terminal</td></tr>
+                </tr>
+                <tr>
+                  <td rowspan="4">External</td>
+                  <tr><td>Improved relation between PRC and the west → trade through HK</td></tr>
+                  <tr><td>End of embargoes</td></tr>
+                  <tr><td>HK's role → regional headquarters // investing through HK into mainland</td></tr>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <br>
+          <div class="history-table">
+            <table>
+              <thead>
+                <tr>
+                  <th>Evolving into knowledge-based and high-value industry</th>
+                  <th>Reason</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td rowspan="5">Internal</td>
+                  <tr><td>Shortage of labor → aging pop // compared to region</td></tr>
+                  <tr><td>Compulsory education + tertiary education → 8 universities by 2000 + vocational → knowledge</td></tr>
+                  <tr><td>Technology → octopus cards → touchless payments</td></tr>
+                  <tr><td>Lacked government support for manufacturing industry</td></tr>
+                </tr>
+                <tr>
+                  <td rowspan="3">External</td>
+                  <tr><td>Protectionism → increase in tariffs + quotas for foreign goods → increased cost of HK-made products → lower competitiveness</td></tr>
+                  <tr><td>Rise of Asian countries → 4 little dragons (SK, TW, SG, JP)</td></tr>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <br>
+          <div class="history-table">
+            <table>
+              <thead>
+                <tr>
+                  <th>Rise of finance and service sectors</th>
+                  <th>Reason</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td rowspan="6">Internal</td>
+                  <tr><td>Professionals → level of education → attracting foreign talents</td></tr>
+                  <tr><td>Legal system compatible with western countries</td></tr>
+                  <tr><td>Infrastructure → airport (city centre) // ports // terminals // railway</td></tr>
+                  <tr><td>Low tax rate // monetary stability → linked // pegged with USD 7.76~7.78</td></tr>
+                  <tr><td>Geographical location → coastal + close to mainland (SZ + DG) // located in Asia → formed 24 hours financial service in HK → invest in different countries</td></tr>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <br>
+          <h4>(Post-WWII) Hong Kong Relations with Mainland</h4>
+          <div class="history-table">
+            <table>
+              <thead>
+                <tr>
+                  <th>Aspect</th>
+                  <th>Time period</th>
+                  <th>Role</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td rowspan="8">Political</td>
+                  <td rowspan="4">Before WWII</td>
+                  <tr><td>Revolutionary base → overthrow Qing</td></tr>
+                  <tr><td>Promote equality + rights + freedom of Chinese → people do labor strikes</td></tr>
+                  <tr><td>Support war efforts against JP → Dongjiang Columns</td></tr>
+                </tr>
+                <tr>
+                  <td rowspan="4">After WWII</td>
+                  <tr><td>Aid provider during disasters (GLF)</td></tr>
+                  <tr><td>Refuge for Chinese people (GLF // civil war // cultural revolution)</td></tr>
+                  <tr><td>Patriotic movement protecting CN sovereignty (Diaoyu Island)</td></tr>
+                </tr>
+                <tr>
+                  <td rowspan="6">Economic</td>
+                  <td rowspan="3">Before WWII</td>
+                  <tr><td>Major entrepot trading partner → connecting CN to the world</td></tr>
+                  <tr><td>Remittance → sending money back to hometown</td></tr>
+                </tr>
+                <tr>
+                  <td rowspan="3">After WWII</td>
+                  <tr><td>Partner for rapid economic development (RAD) → HK investing in mainland</td></tr>
+                  <tr><td>Revival of entrepot trade</td></tr>
+                </tr>
+                <tr>
+                  <td rowspan="6">Social</td>
+                  <td rowspan="3">Before WWII</td>
+                  <tr><td>Refuge (civil war // natural disasters // coolies)</td></tr>
+                  <tr><td>Education provider → for reformers/revolutionaries/Qing/ROC officials</td></tr>
+                </tr>
+                <tr>
+                  <td rowspan="3">After WWII</td>
+                  <tr><td>Aid provider during disasters</td></tr>
+                  <tr><td>CN's role → necessities provider to HK (dongjiang water // food)</td></tr>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <br>
+          <h4>(Post-WWII) Hong Kong Relations with Asia-Pacific Rim</h4>    
+          <div class="history-table">
+            <table>
+              <thead>
+                <tr>
+                  <th>Aspect</th>
+                  <th>Time period</th>
+                  <th>Role</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td rowspan="2">Political</td>
+                  <td>Before WWII</td>
+                  <td>Introduce western idea to CN → democracy // freedom // rights</td>
+                </tr>
+                <tr>
+                  <td>After WWII</td>
+                  <td>Introducing capitalist // market economy to China after R/O</td>
+                </tr>
+                <tr>
+                  <td rowspan="5">Economic</td>
+                  <td>Before WWII</td>
+                  <td>Entrepot trading partner to SEA countries (Sincere // NPH)</td>
+                </tr>
+                <tr>
+                  <td rowspan="4">After WWII</td>
+                  <tr><td>Manufacturing products exporter to SEA countries (made in HK) (Vitasoy)</td></tr>
+                  <tr><td>Financial center (regional) → major investor to SEA</td></tr>
+                  <tr><td>Employment provider → domestic helpers → 150~180000 → remittance back to SEA</td></tr>
+                </tr>
+                <tr>
+                  <td rowspan="5">Social</td>
+                  <td>Before WWII</td>
+                  <td>/</td>
+                </tr>
+                <tr>
+                  <td rowspan="4">After WWII</td>
+                  <tr><td>Refuge for CN, Vietnamese "boat people" → Vietnam War 1970s</td></tr>
+                  <tr><td>Cultural exporter → HK movies (Bruce Lee // Jacky Chan // TVB) + music (Canto-pop)</td></tr>
+                  <tr><td>Cultural facilitators → helped spread JP culture to the region</td></tr>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+      
+        <section class="app-screen" id="jp-history-app">
+          <div class="app-header">
+            <div>
+              <h3>Japan History Notes</h3>
+              <p class="muted-subtitle">(1900 ~ 2000) Japan History Notes</p>
+            </div>
+            <button class="back-btn" onclick="openApp('hist-screen')">Back to HIST ALRAS</button>
+          </div>
+
+          <h4>Abbreviations / Meanings</h4>
+          <div class="history-table">
+            <table>
+              <thead>
+                <tr>
+                  <th>Type</th>
+                  <th>Code</th>
+                  <th>Meaning</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><td rowspan="4">Region</td><td>SEA</td><td>Southeast Asia</td></tr>
+                <tr><td>HK</td><td>Hong Kong</td></tr>
+                <tr><td>US</td><td>United States</td></tr>
+                <tr><td>UK</td><td>United Kingdom</td></tr>
+                <tr><td rowspan="6">Country</td><td>JP</td><td>Japan</td></tr>
+                <tr><td>ROC</td><td>Republic of China</td></tr>
+                <tr><td>CN</td><td>Chinese</td></tr>
+                <tr><td>EN</td><td>English</td></tr>
+                <tr><td>GER</td><td>Germany</td></tr>
+                <tr><td>USSR</td><td>Union of Soviet Socialist Republics</td></tr>
+                <tr><td rowspan="9">Politics // Policies // Military</td><td>IJA</td><td>Imperial Japanese Army</td></tr>
+                <tr><td>SCAP</td><td>Supreme Commander of the Allied Powers</td></tr>
+                <tr><td>LDP</td><td>Liberal Democratic Party</td></tr>
+                <tr><td>OPEC</td><td>Organization of the Petroleum Exporting Countries</td></tr>
+                <tr><td>VER</td><td>Voluntary Export Restraints</td></tr>
+                <tr><td>VIE</td><td>Voluntary Import Expansions</td></tr>
+                <tr><td>MOSS</td><td>Market-Oriented Sector-Selective</td></tr>
+                <tr><td>MITI</td><td>Ministry of International Trade and Industry</td></tr>
+                <tr><td>GATT</td><td>General Agreement on Tariffs and Trade</td></tr>
+                <tr><td rowspan="2">Other</td><td>CN</td><td>Chinese</td></tr>
+                <tr><td>EN</td><td>English</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h4>(Early 20th Century) Political Condition</h4>
+          <div class="history-table">
+            <table>
+              <thead>
+                <tr>
+                  <th>Aspect</th>
+                  <th>Details</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Centralized Power</td>
+                  <td>Genro (elder council) held multiple cabinet positions → appoint / choose prime minister + issue edict + advise (control) the emperor + choose which laws to pass</td>
+                </tr>
+                <tr>
+                  <td>Advantages</td>
+                  <td>Efficiency → powerful families stabilize JP as a whole</td>
+                </tr>
+                <tr>
+                  <td>Disadvantages</td>
+                  <td>Lack of representation // Power concentrated in the hands of a few people // Party politics not effective</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h4>(Early 20th Century) Military Condition</h4>
+          <div class="history-table">
+            <table>
+              <thead>
+                <tr>
+                  <th>Aspect</th>
+                  <th>Details</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Stability</td>
+                  <td>Military not controlled by elected officials // Continuous increase of military expenditure → expansionist policy</td>
+                </tr>
+                <tr>
+                  <td>Example: (1913) Constitution Protection Movement</td>
+                  <td>Army and Navy ministers demanded increasing expenditures → forced the cabinet to dissolve by resigning until demands were met // Constitution protection movement → against the emperor forcing to form a cabinet → violated constitution / democracy // Military dominated political scenes → weak party politics / democratic process → rising demands for democracy</td>
+                </tr>
+                <tr>
+                  <td>Characteristics of Militarism</td>
+                  <td>Superiority Thoughts → Extreme nationalism → foreign expansions // genocide // racial superiority → supporters = ultranationalists // Japanese Self-identification → Yamato race → view themselves as more superior than other Asians → able to defeat western powers → avoid being colonized → destined to lead Asia against the west → by colonizing Asian countries → ultra nationalists + groups → foreign expansion // Seppuku → Absolute loyalty and obedience → prevent being captured / tortured → not release information to enemy → seppuku ritual / ceremony</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h4>(Early 20th Century) Economic Conditions</h4>
+          <div class="history-table">
+            <table>
+              <thead>
+                <tr>
+                  <th>Aspect</th>
+                  <th>Details</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Change of Mining Industry</td>
+                  <td>Rapid industrialization → coal + steel → heavy industry → convict / forced paid labor → exploitation</td>
+                </tr>
+                <tr>
+                  <td>Light (Textile) Industry</td>
+                  <td>Conditions: Widespread exploitation against women and children → low wages + harsh working environment + work hazards + diseases // Children = assets for factories → expendable → long working hours + paid 1 sen // Children → obedient + without fear of danger // Modernization: Use of machines // mass production // division of labor // assembly line → higher efficiency / productivity → 24 hours production + wage labor</td>
+                </tr>
+                <tr>
+                  <td>Actions on Natural Resources</td>
+                  <td>Inadequate natural resources → foreign expansion → colonies → targeted Korean peninsula / Manchuria / SEA</td>
+                </tr>
+                <tr>
+                  <td>JP Industrial Development</td>
+                  <td>Increased: Textile: from 152 to 416 from 1912~1938 → 3 times</td>
+                </tr>
+                <tr>
+                  <td>Zaibatsu</td>
+                  <td>Mitsubishi // mitsui // sumitomo // Yasuda → promoted industrialization → monopolize → many industries → horizontal + vertical integration → government relied on zaibatsu → increased influence → collusion / corruption → supported militarism // Positive: Promoted industrialization → have capital + labor + raw materials // Negative: Unequal distribution of wealth → collusion / corruption + not a supporter for democracy</td>
+                </tr>
+                <tr>
+                  <td>WWI</td>
+                  <td>1914 ~ 1918 → increasing econ development → WWI Europe was destroyed → needed supplies and products from JP → econ peaked around WWI</td>
+                </tr>
+                <tr>
+                  <td>Post-WWI</td>
+                  <td>JP econ stagnation → Europe econ recovery → JP econ sharp decline after WWI → worst during Great Depression → 80% decline of banks</td>
+                </tr>
+                <tr>
+                  <td>1930s</td>
+                  <td>Gradual increase of military burden → 6% in 1920 to 23% in 1938 → war bonds in postal office / banks → civilian loan money to country → return with interest after X years</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h4>(Early 20th Century) Social Conditions</h4>
+          <div class="history-table">
+            <table>
+              <thead>
+                <tr>
+                  <th>Aspect</th>
+                  <th>Details</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Freedom / Human Rights</td>
+                  <td>Limited freedom → freedom with conditions → cannot against emperor // against law // must respect conditions // customs // emperor</td>
+                </tr>
+                <tr>
+                  <td>Education</td>
+                  <td>Modernization: Subject / topic = based on western products / invention // Learning English language // Increasing primary students → 800000 in 1900 to 1.2 million in 1907 // Traditional: Filial piety toward parents / elders // Respect constitution / laws / order // Patriotic / sacrifice for JP / emperor</td>
+                </tr>
+                <tr>
+                  <td>(1918) Rice Riot</td>
+                  <td>Government bought rice from farmers at low prices → support military expansion + overseas troops → discontent against party politicians → support militarists → foreign expansion → resolve socio-econ problems</td>
+                </tr>
+                <tr>
+                  <td>Food and Cuisines</td>
+                  <td>Modernization: Hairstyle → cut off queue / ponytail / bun // Food / drink / diet → utensils / omurice / pasta / hamburg steak</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h4>(Early 20th Century) Diplomatic Conditions</h4>
+          <div class="history-table">
+            <table>
+              <thead>
+                <tr>
+                  <th>Aspect</th>
+                  <th>Details</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>(1894-1895) Sino-Japanese War</td>
+                  <td>Message: Japan being perceived as weaker than China has defeated China in the Sino-Japanese War // Clue: Samurai</td>
+                </tr>
+                <tr>
+                  <td>International Status</td>
+                  <td>Achieved: Invited to draft the Treaty of Versailles // Colonized Korean peninsula after Russo-Japanese War // Joining anti-communist alliance with US, Fr, UK // Not achieved: Racial discrimination by the US → immigration act // League of Nations → JP must return // Manchuria to China → illegal invasion</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h4>(Early 20th Century ~ Pre-WWII) Factors Leading to Militarism</h4>
+          <div class="history-table">
+            <table>
+              <thead>
+                <tr>
+                  <th>Factor</th>
+                  <th>Details</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td rowspan="4">Military</td>
+                  <td>Longstanding military tradition</td>
+                </tr>
+                <tr>
+                  <td>JP Imperial Reserve Association → 2 million members throughout JP → use reserve association to influence general public on their perspective of war / foreign expansion → justify and support war</td>
+                </tr>
+                <tr>
+                  <td>226 / 515 coup → more support to militarism to have political stability → avoid criticizing militarists → avoid being targeted as political enemy → solidifying militarist rule → extreme nationalism / patriotism</td>
+                </tr>
+                <tr>
+                  <td>Army / navy minister can resign → dissolve cabinet until increase military expenditure → government dominated by the military</td>
+                </tr>
+                <tr>
+                  <td rowspan="6">Political</td>
+                  <td>Loyalty towards the emperor of JP → not to take any political sides → remain neutral</td>
+                </tr>
+                <tr>
+                  <td>Hideki Tojo formed cabinet → centralized power → militarists</td>
+                </tr>
+                <tr>
+                  <td>Weak emperor (Taisho Period) → increasing militarist influence → militarists and party politicians fought each other for power → unstable government / cabinet → paralyzing government</td>
+                </tr>
+                <tr>
+                  <td>Increasing collusion and corruption among party politicians → social discontent → people supported militarism → 15000 cases cheating in elections → disregard public interest → bribery (building schools / bridges / roads to gain votes)</td>
+                </tr>
+                <tr>
+                  <td>(External) Washington Conference → fixed ratio of tonnage in navy (UK:US:JP = 5:5:3) → JP has less tonnage → JP felt 60% of naval power was unfair</td>
+                </tr>
+                <tr>
+                  <td>(Education) Expected qualities and values → moral / ethics / values → loyalty + courage + kindness</td>
+                </tr>
+                <tr>
+                  <td rowspan="3">Economical</td>
+                  <td>JP econ declination after WWI → people supported militarism</td>
+                </tr>
+                <tr>
+                  <td>JP had limited resources + post-WWI had econ stagnation + (1923) Great Kanto Earthquake caused 100000 deaths and 40 banks closed down + (1929) Great Depression → militarists suggested expansionists policies + colonization of Asia + war against the wealthy countries is justified</td>
+                </tr>
+                <tr>
+                  <td>1929 → Great Depression → JP lacked natural resources → militarists suggested econ integration (colonization between JP and CN) → CN = resources // JP = capital + intelligence → exploit CN resources + labor force → JP industrialization → raw materials + markets → totalitarian states have faster econ recovery during GD → JP foreign expansion → econ growth → rapid militarization → 99% government expenditure toward military</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h4>(WWII) Japanese Participation</h4>
+          <div class="history-table">
+            <table>
+              <thead>
+                <tr>
+                  <th>Aspect</th>
+                  <th>Details</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Japan's Participation in the Axis Power</td>
+                  <td>Axis powers → military alliance between GER, JP, Italy in WWII // JP = anti-communist → JP tradition → spiritual leader = emperor → communism = natural enemy to government system</td>
+                </tr>
+                <tr>
+                  <td>Japan's Foreign Expansion</td>
+                  <td>Northwards → Korean peninsula & Manchuria // China & industrial resources // Southwards → Shanghai / Nanjing / HK & coastal areas / ports // Westwards → SEA & natural resources / oil / rubber / food</td>
+                </tr>
+                <tr>
+                  <td>Japan's Self-identification of its Responsibility in Asia</td>
+                  <td>Defend Asia against the west → colonizing Asia → under JP control → pan-asianism → JP as leader against western expansion</td>
+                </tr>
+                <tr>
+                  <td>Japan's Slogan</td>
+                  <td>Greater East Asia Co-prosperity Sphere</td>
+                </tr>
+                <tr>
+                  <td>Japanese Invasion of Manchuria</td>
+                  <td>9-18 Incident → JP invasion → claimed JP-owned railway was destroyed by CN → Lytton Report → LoN required JP withdraw from CN territories → JP withdraw from LoN</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h4>(Post-WWII) Japanese Surrender</h4>
+          <div class="history-table">
+            <table>
+              <thead>
+                <tr>
+                  <th>Aspect</th>
+                  <th>Details</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>SCAP Occupation</td>
+                  <td>JP defeated → Emperor Hirohito surrender → occupied by SCAP government → demilitarization → Show that the Emperor is not a god // Partnership / ally for the capitalist bloc during Cold War → show equal status between US and JP</td>
+                </tr>
+                <tr>
+                  <td>Factors Affecting Difference between JP and GER after WWII under US Occupation</td>
+                  <td>Start of Cold War → US needed a reliable ally in Asia to counter USSR / PRC // JP as a base for capitalist bloc + military base</td>
+                </tr>
+                <tr>
+                  <td>Attitude of Gen. MacArthur towards JP</td>
+                  <td>Mixed → Friendly / respectful toward emperor → removed emperor from list of war criminals // Forced JP to follow demands / orders by US</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h4>(1950~2000s) Political Conditions</h4>
+          <div class="history-table">
+            <table>
+              <thead>
+                <tr>
+                  <th>Aspect</th>
+                  <th>Details</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Background</td>
+                  <td>(External Factor) Japan under pressure from SCAP → implemented a new constitution</td>
+                </tr>
+                <tr>
+                  <td>Declarations</td>
+                  <td>Sovereignty rests with people (not emperor) // Emperor is a symbolic leader only → no political functions // Renunciation of war → can no longer declare war // Non-possession of military force (Article 9) → self-defense force only // Restricted JP renunciation of war // Citizens' rights and obligations // Equality among all citizens // Political participation by all // Religion freedom // Freedom in publications / movements / marriages // Protect private properties // Rule of law // Diet as the highest legislative body</td>
+                </tr>
+                <tr>
+                  <td>Anti-monopoly Policy</td>
+                  <td>Demilitarization → against militarism supports during WWII → dissolve zaibatsu</td>
+                </tr>
+                <tr>
+                  <td>Stability</td>
+                  <td>Before: Pre-WWII → political instability → political assassinations / military coups → resume party politics // After: Political stability → LDP dominated elections for ~40 years → militarism</td>
+                </tr>
+                <tr>
+                  <td>Reverse Course</td>
+                  <td>Cold War → US government thinks SCAP policies are too socialist // Revise earlier SCAP policies // Use JP as an example to show the world that capitalism is superior</td>
+                </tr>
+                <tr>
+                  <td rowspan="7">Role Changes</td>
+                  <td>Emperor (Before Meiji): Command military // Appoint / dismiss officials // Control diet // Sacred and inviolable</td>
+                </tr>
+                <tr>
+                  <td>Emperor (After Surrender): Symbolic leader // No sovereign power // Can no longer control diet // no political / military power</td>
+                </tr>
+                <tr>
+                  <td>Diet (Before): Limited authority → no decision-making power // House of peers: nobles // house of representatives: limited representation // House of peers has veto power</td>
+                </tr>
+                <tr>
+                  <td>Diet (After): Responsible to the people and not emperor // All members elected // House of representatives have greatest power</td>
+                </tr>
+                <tr>
+                  <td>Prime Minister and Cabinet (Before): Appointed by and responsible to the emperor</td>
+                </tr>
+                <tr>
+                  <td>Prime Minister and Cabinet (After): Responsible to the people</td>
+                </tr>
+                <tr>
+                  <td>Judiciary (After): Became independent → separation of powers // Rule of law</td>
+                </tr>
+                <tr>
+                  <td rowspan="2">Military (Before)</td>
+                  <td>Military dictatorship → militarism // Controlled cabinet // Declared wars // Not controlled by Diet or Prime Minister // Direct access to emperor</td>
+                </tr>
+                <tr>
+                  <td>Military (After): Army and navy disbanded // Small-sized military for self-defense // Mutual security pact = US stationed troops in JP</td>
+                </tr>
+                <tr>
+                  <td rowspan="2">The people (Before)</td>
+                  <td>Only wealthy males / who pay taxes can vote // Universal male suffrage (1925) // Had little knowledge about democracy</td>
+                </tr>
+                <tr>
+                  <td>The people (After): Universal suffrage // More freedom of speech and knowledge on democracy // Forming political parties</td>
+                </tr>
+                <tr>
+                  <td>Privy council (Before)</td>
+                  <td>Advisors to the emperor // Direct access to the emperor // Appointed by emperor // More powerful than the cabinet and diet</td>
+                </tr>
+                <tr>
+                  <td>Privy council (After)</td>
+                  <td>Council was dissolved: demilitarization</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h4>(1950~2000s) Economic Conditions</h4>
+          <div class="history-table">
+            <table>
+              <thead>
+                <tr>
+                  <th>Category</th>
+                  <th>Factor</th>
+                  <th>Explanation</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td rowspan="5">External</td>
+                  <td>Cold War</td>
+                  <td>Against USSR / PRC / DPRK → considered rearm JP as a military ally</td>
+                </tr>
+                <tr>
+                  <td>Declaration</td>
+                  <td>Reduce military expenditure → reliance on US military → small-scale self-defense force → less than 1% GNP for military → resources invested in tech / econ <br> Treaty of San Francisco (post-war settlement for Asia pacific) → JP make reparations to allied forces → not by cash // by services / production → factories in SEA → a portion of manufactured products will be given as reparations → <br> - SEA reliance on JP products → JP products enter SEA markets <br>
+      - Trade networks in SEA
+      </td>
+                </tr>
+                <tr>
+                  <td>Dodge Plan</td>
+                  <td>Advantage: stabilized econ + currency → set a foundation for future growth + promote export / trade<br>Disadvantage: Econ will slow due to government spending</td>
+                </tr>
+                <tr>
+                  <td>Agricultural reform</td>
+                  <td>Poor living conditions after WWII → SCAP to support farmers / workers → improve quality of life → prevent rise of communism in JP<br>Against the wealthy / landlords that were militarists during WWII → demilitarization</td>
+                </tr>
+                <tr>
+                  <td>Korean War</td>
+                  <td>Korean War led to econ growth in JP → special procurement from US → JP benefited from KR’s suffering / war
+
+      </td>
+                </tr>
+                <tr>
+                  <td rowspan="5">Internal</td>
+                  <td>Government policies</td>
+                  <td>- MITI → give direction for tech industry → focus on specific sectors (high tech) → ‘double steel production’ → direct resources <br> 
+      - Coordinate large companies (previously zaibatsu) <br>
+      - International organizations → GATT (WTO) / IMF / OECD <br>
+      - Boost export / trade // loans for development // formulate policies with other countries <br>
+      - ’Income doubling plan’ within 10 years → success <br>
+      - Low interest / tax rate → boost spending <br>
+      - Investment in infrastructure <br>
+      </td>
+                </tr>
+                <tr>
+                  <td>Production of hi-tech goods</td>
+                  <td>Increasing → <br>
+      - Car → 1300 to 4.5 million → Toyota / Nissan / Suzuki / Honda / Mitsubishi → low fuel consumption / more efficient <br>
+      - Camera → 0 to 4.5 million → Nikon / Fuji <br>
+      - TV → 0 to 7.5 million → Panasonic / Toshiba / Sony <br>
+
+      </td>
+                </tr>
+                <tr>
+                  <td>Food price</td>
+                  <td>Stable <br>
+      - JP income doubling → lower cost of necessities → higher savings and consumer spending → increased spending on consumer products (electronics / cars) <br>
+      - Increased savings <br>
+      </td>
+                </tr>
+                <tr>
+                  <td>Karoshi</td>
+                  <td>Obedience and sacrifices → bushido towards company for econ recovery / miracle</td>
+                </tr>
+                <tr>
+                  <td>Societal change</td>
+                  <td>- Wilingness to learn: Tech transfer / advancement → Toyota → new industries: auto car / semi-conductor / computer / video games / electronics / watches <br>
+                - Savings / investments: Highest saving rates in the world → deposit in banks → banks to invest in JP industries → econ growth <br>
+                - Unique management style: Life-time employment → wage related to seniority (years of work) → stable work environment + harmonious → like a family → less conflicts + higher efficiency 
+      <br> 
+      - Narrowing of urban-rural disparity: Rural → labor force surplus → too many farmers / too few land → low income + low productivity // 1970s → rural-urban migration → manufacturing / factory jobs → increase job opportunities → increase wages → labor shortage → lessen disparity <br>
+      - Higher purchasing power: Three sacred treasures → television + refrigerator + washing machine → increase quality of life + entertainment + productivity of women + convenience + women employment → join labor force → changes in women’s role / empowerment <br>
+      - More travelling: Number of JP people travelling abroad → increasing: 0 in 1965 to 20,000,000 in 2000 → middle class → high disposable income / expenditure → popular destination: hong kong <br>
+      - Trend of JP Yen: Gradual increase of value of Yen (0.35 in 1980 to 1.2 in 2010) → higher yen → JP products more expensive → less consumers choose JP products</td>
+
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h4>(1973) Japan Oil Crisis</h4>
+          <div class="history-table">
+            <table>
+              <thead>
+                <tr>
+                  <th>Aspect</th>
+                  <th>Details</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Factors</td>
+                  <td>Conflicts / war → oil supply decrease // OPEC countries → increase oil price → decrease supply on purpose → negotiate higher prices</td>
+                </tr>
+                <tr>
+                  <td>Course</td>
+                  <td>OPEC set policies to quadruple the price of oil → panic buying (detergent / toilet tissue) → shortage of goods</td>
+                </tr>
+                <tr>
+                  <td rowspan="2">Impacts</td>
+                  <td>Positive: Development in auto industry → higher efficiency of engines / higher mileage of cars → better than US / EU cars // 1970s → JP governments decrease interest rates → boost lending to companies → lower borrowing costs → companies expand / operate → improve economy // Before: reliance on imported fossil fuels → on crisis → negatively affect econ // After: energy sources more diversified → increase in nuclear → stabilize cost → econ development // Advanced tech: dev electronics / consumer products → alleviate oil crisis → household appliances (colored TV / washer / refrigerator) // semi-conductors (computer) → domestic + international consumption</td>
+                </tr>
+                <tr>
+                  <td>Negative: Decline in JP oil / energy dependent industries (heavy industry): higher production costs</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h4>(1970s) Trade Disputes between US and Japan</h4>
+          <div class="history-table">
+            <table>
+              <thead>
+                <tr>
+                  <th>Aspect</th>
+                  <th>Details</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>VER</td>
+                  <td>JP to restrict export to US + tariffs on JP products → reduce JP exports // JP products become less competitive → JP econ decline</td>
+                </tr>
+                <tr>
+                  <td>VIE</td>
+                  <td>JP import US products → increase US companies → competition → JP companies are pressured</td>
+                </tr>
+                <tr>
+                  <td>MOSS</td>
+                  <td>US companies enter JP market → through investments / US products</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h4>(1990s) Women's Empowerment</h4>
+          <div class="history-table">
+            <table>
+              <thead>
+                <tr>
+                  <th>Aspect</th>
+                  <th>Details</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Marriage</td>
+                  <td>People are marrying at a later age (edu + career) → “proper” age to marry is disappearing → less dependency on men / family → financial independence</td>
+                </tr>
+                <tr>
+                  <td>Education</td>
+                  <td>Higher level of education (1955: 2.4% female senior high school graduates entered four-year university → 22.9% in 1995)</td>
+                </tr>
+                <tr>
+                  <td>Employment</td>
+                  <td>More female force participation → M-shaped curve → high women employment → high employment during youth / late adult + low employment in the 30s (caretaking role)</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h4>(1950~2000s) Diplomatic Conditions</h4>
+          <div class="history-table">
+            <table>
+              <thead>
+                <tr>
+                  <th>Aspect</th>
+                  <th>Details</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Yasukuni Shrine</td>
+                  <td>Worshipping those who sacrificed for JP during wars → symbolizes a praise of loyalty / obedience + represents JP’s right wing / ultranationalists (a minority with huge influence on JP politics) + religious practice regardless of war debts // JP soldiers who committed war crimes → category 1 war criminals → judged by international court / UN → executed post-war → praising will negatively affect JP relations with PRC / ROK / SEA // JP government officials should not visit the shrine as a sign of respect to neighbouring countries</td>
+                </tr>
+                <tr>
+                  <td>Comfort Women and Territory Disputes</td>
+                  <td>Continuous disputes about comfort women and territories between JP and PRC, ROK → compensations // Diaoyu island / Dokdo island → for national resources / natural gas / fishing rights / maritime claims / shipping routes</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+  
+        <!-- WORDLE APP -->
+        <section class="app-screen" id="wordle-app">
+          <div class="app-header">
+            <div>
+              <h3>Wordle Game</h3>
+              <p class="muted-subtitle">Guess the five-letter vocabulary word in 6 attempts.</p>
+            </div>
+            <button class="back-btn" onclick="showLanding()">Back to EN ALRAS</button>
+          </div>
+
+          <div class="wordle-container">
+            <div class="wordle-status" id="wordle-status"></div>
+            
+            <div style="text-align: center; margin: 32px 0;">
+              <div id="word-display" style="font-size: 3rem; font-weight: 700; letter-spacing: 0.5em; color: var(--primary); font-family: 'Courier New', monospace;"></div>
+            </div>
+
+            <div class="wordle-guesses" id="guesses-list" style="margin-bottom: 24px;"></div>
+
+            <div class="wordle-input-area">
+              <input 
+                type="text" 
+                id="guess-input" 
+                placeholder="Enter a 5-letter word" 
+                maxlength="5"
+                autocomplete="off"
+                onkeydown="handleGuessKeydown(event)"
+              >
+              <button class="nav-btn primary" onclick="submitGuess()">Guess</button>
+            </div>
+
+            <div class="progress-text" id="attempts-text"></div>
+            
+            <button class="nav-btn primary hidden" id="new-game-btn" onclick="initializeWordle()" style="margin-top: 16px; width: 100%;">New Game</button>
+          </div>
+        </section>
+
+      </div>
+    </div>
+  </main>
+
+
+</body>
+</html>
