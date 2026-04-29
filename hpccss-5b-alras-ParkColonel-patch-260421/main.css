@@ -1,0 +1,503 @@
+header {
+  width: 100%;
+  padding: 14px 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: sticky;
+  top: 0;
+  background: var(--surface);
+  border-bottom: 3px solid var(--border);
+  z-index: 20;
+}
+
+.header-nav {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.nav-btn {
+  padding: 8px 16px;
+  background: var(--primary);
+  color: var(--ink);
+  border: 2px solid var(--border);
+  font-weight: 700;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: all 0.2s ease;
+}
+
+.nav-btn:hover {
+  transform: scale(1.05);
+  box-shadow: var(--shadow);
+}
+
+.brand h1 {
+  margin: 0;
+  font-size: 1.25rem;
+  background: var(--primary);
+  display: inline-block;
+  padding: 4px 10px;
+  border: 2px solid var(--border);
+}
+
+.brand p {
+  margin: 6px 0 0;
+  color: var(--muted);
+  font-size: 0.82rem;
+  font-weight: 600;
+}
+
+main {
+  width: min(1240px, calc(100% - 32px));
+  margin: 0 auto;
+  padding: 30px 0 70px;
+}
+
+.page-grid {
+  display: grid;
+  grid-template-columns: 210px 1fr;
+  gap: 18px;
+  align-items: start;
+}
+
+.alras-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 14px;
+  background: var(--surface);
+  border: 3px solid var(--border);
+  box-shadow: var(--shadow);
+}
+
+.sidebar-title {
+  margin: 0 0 6px;
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+
+.alras-item {
+  padding: 12px 10px;
+  border: 2px solid var(--border);
+  background: transparent;
+  color: var(--text);
+  text-align: left;
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.alras-item:hover,
+.alras-item.active {
+  background: var(--primary);
+}
+
+.page-content {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.hero {
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: 0;
+  border: 3px solid var(--border);
+  box-shadow: var(--shadow);
+}
+
+.hero-copy {
+  background: var(--primary);
+  padding: 32px;
+  border-right: 3px solid var(--border);
+}
+
+.hero-copy h2 {
+  margin: 0 0 12px;
+  font-size: clamp(2.4rem, 5vw, 4.5rem);
+  line-height: 0.95;
+}
+
+.hero-copy p {
+  margin: 0;
+  color: #222;
+  line-height: 1.8;
+  font-weight: 600;
+}
+
+.hero-panel {
+  padding: 18px;
+  background: var(--surface);
+}
+
+.feature-list {
+  display: grid;
+  gap: 10px;
+}
+
+.feature-card {
+  padding: 14px;
+  background: var(--surface-soft);
+  border: 2px solid var(--border);
+  display: grid;
+  grid-template-columns: 40px 1fr;
+  gap: 10px;
+  cursor: pointer;
+}
+
+.feature-card:hover {
+  background: #fff;
+}
+
+.feature-card span {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border: 2px solid var(--border);
+  background: #111;
+  color: var(--primary);
+  font-weight: 700;
+}
+
+.feature-card h3 {
+  margin: 0 0 6px;
+  font-size: 1.05rem;
+}
+
+.feature-card p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+.hidden {
+  display: none !important;
+}
+
+.app-screen {
+  display: none;
+  width: 100%;
+  margin-top: 12px;
+}
+
+.jump-in {
+  animation: jumpIn 320ms ease-out;
+}
+
+@keyframes jumpIn {
+  0% {
+    opacity: 0;
+    transform: translateY(18px) scale(0.98);
+  }
+  65% {
+    opacity: 1;
+    transform: translateY(-6px) scale(1.01);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.app-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px;
+  border: 3px solid var(--border);
+  background: var(--surface);
+  margin-bottom: 16px;
+}
+
+.app-header h3 {
+  margin: 0;
+}
+
+.muted-subtitle {
+  margin: 6px 0 0;
+  color: var(--muted);
+}
+
+.app-header button,
+.controls button,
+.wordle-input-area button,
+.wordle-new-game,
+#set-challenge-submit,
+#set-challenge-newset {
+  border: 2px solid var(--border);
+  background: var(--primary);
+  color: #111;
+  padding: 10px 16px;
+  border-radius: 0;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.controls {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 18px;
+}
+
+.controls button.secondary {
+  background: #fff;
+}
+
+.controls button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.progress {
+  margin-top: 12px;
+  color: var(--muted);
+  text-align: center;
+  font-weight: 700;
+}
+
+.set-challenge-container,
+.update-logs-container,
+.wordle-container,
+.history-table,
+.cold-war-frame {
+  background: var(--surface);
+  border: 3px solid var(--border);
+  box-shadow: var(--shadow);
+  border-radius: 0;
+}
+
+.set-challenge-container,
+.wordle-container,
+.update-logs-container,
+.history-table,
+.cold-war-frame {
+  padding: 20px;
+}
+
+.set-challenge-row label {
+  color: var(--muted);
+  font-size: 0.92rem;
+  font-weight: 700;
+}
+
+.set-challenge-input,
+.wordle-input-area input {
+  width: 100%;
+  padding: 10px 12px;
+  border: 2px solid var(--border);
+  background: #fff;
+  color: var(--text);
+  font-weight: 700;
+  border-radius: 0;
+}
+
+.set-challenge-actions,
+.wordle-input-area {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.log-entry {
+  display: grid;
+  gap: 12px;
+}
+
+.log-date {
+  font-size: 1rem;
+  font-weight: 800;
+  color: #111;
+  padding: 10px;
+  background: var(--primary);
+  border: 2px solid var(--border);
+}
+
+.log-item {
+  display: flex;
+  gap: 10px;
+  padding: 10px;
+  border: 2px solid var(--border);
+  background: #fff;
+}
+
+.log-badge {
+  color: var(--success);
+  font-weight: 800;
+}
+
+.wordle-status {
+  text-align: center;
+  font-size: 1.05rem;
+  font-weight: 800;
+  min-height: 26px;
+}
+
+.status-win {
+  color: var(--success);
+}
+
+.status-lose {
+  color: var(--danger);
+}
+
+.word-display {
+  font-size: 2.2rem;
+  letter-spacing: 0.28em;
+  font-weight: 900;
+  color: #111;
+  font-family: 'Courier New', monospace;
+  margin: 14px 0;
+}
+
+.wordle-guesses {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-height: 80px;
+}
+
+.guess-line {
+  display: flex;
+  gap: 6px;
+  justify-content: center;
+}
+
+.letter-box {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  font-size: 1.1rem;
+  font-weight: 800;
+  border-radius: 0;
+  color: var(--text);
+  border: 2px solid var(--border);
+  background: #fff;
+}
+
+.letter-box.correct {
+  background: #65d463;
+}
+
+.letter-box.present {
+  background: var(--primary);
+}
+
+.letter-box.absent {
+  background: #cfcfcf;
+  color: #6b6b6b;
+}
+
+.wordle-attempts {
+  text-align: center;
+  color: var(--muted);
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.history-table table {
+  width: 100%;
+  border-collapse: collapse;
+  color: var(--text);
+}
+
+.history-table th,
+.history-table td {
+  padding: 12px;
+  border: 2px solid var(--border);
+  text-align: left;
+  background: #fff;
+}
+
+.history-table thead th {
+  background: var(--primary);
+  color: #111;
+  font-weight: 800;
+}
+
+.geog-table table {
+  width: 100%;
+  border-collapse: collapse;
+  color: var(--text);
+}
+
+.geog-table th,
+.geog-table td {
+  padding: 12px;
+  border: 2px solid var(--border);
+  text-align: left;
+  background: #fff;
+}
+
+.geog-table thead th {
+  background: var(--primary);
+  color: #111;
+  font-weight: 800;
+}
+
+.cold-war-frame iframe {
+  width: 100%;
+  min-height: 720px;
+  height: calc(100vh - 280px);
+  border: 2px solid var(--border);
+  background: #fff;
+}
+
+@media (max-width: 980px) {
+  .page-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .hero {
+    grid-template-columns: 1fr;
+  }
+
+  .hero-copy {
+    border-right: 0;
+    border-bottom: 3px solid var(--border);
+  }
+}
+
+@media (max-width: 720px) {
+  header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .hero-copy,
+  .hero-panel,
+  .app-header {
+    padding: 16px;
+  }
+
+  .feature-card {
+    grid-template-columns: 1fr;
+  }
+}
+
+.page-footer {
+  width: 100%;
+  padding: 24px;
+  background: var(--surface);
+  border-top: 3px solid var(--border);
+  text-align: center;
+  margin-top: 60px;
+}
+
+.footer-content {
+  width: min(1240px, calc(100% - 32px));
+  margin: 0 auto;
+  color: var(--text);
+  font-weight: 600;
+}
+
+.feature-footer {
+  display: none;
+}

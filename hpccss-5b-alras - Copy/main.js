@@ -63,17 +63,15 @@ function selectAlras(alras) {
 
   if (isHist) {
     primaryTitle.textContent = 'Common Abbreviations';
-    primaryDesc.textContent = ' Regional, country, policy, politics, and military abbreviations.';
+    primaryDesc.textContent = 'Open the HIST ALRAS abbreviations table for regional, country, policy, politics, and military terms.';
     primaryCard.setAttribute('onclick', 'openHistoryAbbreviations()');
     secondaryTitle.textContent = 'Cold War Notes';
-    secondaryDesc.textContent = '(1945 ~ 1991) Cold War Notes';
+    secondaryDesc.textContent = 'Open the HIST ALRAS Cold War notes table from the course reference.';
     secondaryCard.setAttribute('onclick', 'openColdWarNotes()');
     tertiaryTitle.textContent = 'Hong Kong History Notes';
-    tertiaryDesc.textContent = '(1900 ~ 2000) Hong Kong History Notes';
+    tertiaryDesc.textContent = 'Review the HIST ALRAS Hong Kong History notes table from the course reference.';
     tertiaryCard.setAttribute('onclick', 'openHkHistoryNotes()');
-    tertiaryCard.classList.remove('hidden');
     tertiaryCard.style.display = 'block';
-    quaternaryCard.classList.remove('hidden');
     quaternaryCard.style.display = 'block';
   } else if (isEn) {
     primaryTitle.textContent = 'Generic Vocabulary Flashcards';
@@ -83,11 +81,9 @@ function selectAlras(alras) {
     secondaryDesc.textContent = 'Challenge yourself with the popular word-guessing game. Guess the five-letter word in 6 attempts using vocabulary from your course.';
     secondaryCard.setAttribute('onclick', 'openWordle()');
     tertiaryTitle.textContent = 'Vocabulary Set Challenge';
-    tertiaryDesc.textContent = 'Choose a synonym set and fill in the rest of the words using first-two-letter hints.';
+    tertiaryDesc.textContent = 'Choose a synonym set and fill in the rest of the words using first-letter hints.';
     tertiaryCard.setAttribute('onclick', 'openSetChallenge()');
-    tertiaryCard.classList.remove('hidden');
     tertiaryCard.style.display = 'block';
-    quaternaryCard.classList.add('hidden');
     quaternaryCard.style.display = 'none';
   } else {
     primaryTitle.textContent = 'Generic Vocabulary Flashcards';
@@ -96,9 +92,7 @@ function selectAlras(alras) {
     secondaryTitle.textContent = 'Wordle Game';
     secondaryDesc.textContent = 'Challenge yourself with the popular word-guessing game. Guess the five-letter word in 6 attempts using vocabulary from your course.';
     secondaryCard.setAttribute('onclick', 'openWordle()');
-    tertiaryCard.classList.add('hidden');
     tertiaryCard.style.display = 'none';
-    quaternaryCard.classList.add('hidden');
     quaternaryCard.style.display = 'none';
   }
 
@@ -177,13 +171,13 @@ function renderSetChallenge() {
   document.getElementById('set-challenge-meaning').textContent = state.currentSet.meaning;
   document.getElementById('set-challenge-word').textContent = state.displayedWord;
   document.getElementById('set-challenge-attempts').textContent = `Chances remaining: ${state.attempts}`;
-  document.getElementById('set-challenge-status').textContent = 'Enter the rest of the synonym set below. The first two letters of each answer are shown.';
+  document.getElementById('set-challenge-status').textContent = 'Enter the rest of the synonym set below. The first letter of each answer is shown.';
 
   const inputsHtml = state.remainingWords.map((word, index) => {
-    const firstLetters = word.trim().slice(0, 2).toUpperCase();
+    const firstChar = word.trim().charAt(0).toUpperCase();
     return `
       <div class="set-challenge-row">
-        <label for="set-challenge-input-${index}">${index + 1}. ${firstLetters}...</label>
+        <label for="set-challenge-input-${index}">${index + 1}. ${firstChar}...</label>
         <input type="text" id="set-challenge-input-${index}" class="set-challenge-input" autocomplete="off" />
       </div>
     `;

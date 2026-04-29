@@ -30,84 +30,123 @@ const alrasSettings = {
   'GEOG ALRAS': {
     headerName: 'Geography',
     sectionName: 'Geography',
-    description: `Available Features: <br>- Generic Vocabulary Flashcards <br>- Wordle`
+    description: `Status: <br>- Geography section is coming soon. <br>- Please check back for upcoming materials and activities.`
   },
   'CHEM ALRAS': {
     headerName: 'Chemistry',
     sectionName: 'Chemistry',
-    description: `Available Features: <br>- Generic Vocabulary Flashcards <br>- Wordle`
+    description: `Status: <br>- Chemistry section is coming soon. <br>- Please check back for upcoming materials and activities.`
   }
 };
 
 let currentAlras = 'EN ALRAS';
+const screenIds = [
+  'en-screen',
+  'hist-screen',
+  'geog-screen',
+  'chem-screen',
+  'flashcard-app',
+  'history-table-app',
+  'cold-war-app',
+  'hk-history-app',
+  'jp-history-app',
+  'desc-lang-app',
+  'update-logs-app',
+  'set-challenge-app',
+  'wordle-app'
+];
+
+const routeMap = {
+  home: showLanding,
+  flashcards: openFlashcards,
+  abbreviations: openHistoryAbbreviations,
+  'cold-war': openColdWarNotes,
+  'hk-history': openHkHistoryNotes,
+  'jp-history': openJpHistoryNotes,
+  wordle: openWordle,
+  challenge: openSetChallenge,
+  updates: openUpdateLogs
+};
+
+function setRoute(route) {
+  if (!route) return;
+  if (window.location.hash !== `#${route}`) {
+    history.replaceState(null, '', `#${route}`);
+  }
+}
+
+function animateJump(elementId) {
+  const el = document.getElementById(elementId);
+  if (!el) return;
+  el.classList.remove('jump-in');
+  void el.offsetWidth;
+  el.classList.add('jump-in');
+}
+
+function hideAllScreens() {
+  screenIds.forEach((id) => {
+    const el = document.getElementById(id);
+    if (el) el.classList.remove('active');
+  });
+}
+
+function openScreen(screenId, {
+  route,
+  heroDisplay = 'none',
+  scroll = true
+} = {}) {
+  hideAllScreens();
+  const hero = document.querySelector('.hero, .hero-grid');
+  if (hero) hero.style.display = heroDisplay;
+  const screen = document.getElementById(screenId);
+  if (!screen) return;
+  screen.classList.add('active');
+  animateJump(screenId);
+  if (scroll) {
+    screen.scrollIntoView({ behavior: 'smooth' });
+  }
+  setRoute(route);
+}
+
+function openApp(appId) {
+  const heroDisplay = appId === 'en-screen' ? 'grid' : 'none';
+  openScreen(appId, { heroDisplay });
+}
+
+function switchSubject(screenId, headerTitle, buttonElement) {
+  document.querySelectorAll('.alras-item').forEach((btn) => btn.classList.remove('active'));
+  if (buttonElement) buttonElement.classList.add('active');
+  const titleElement = document.getElementById('header-title');
+  if (titleElement) titleElement.innerText = headerTitle;
+  const heroDisplay = screenId === 'en-screen' ? 'grid' : 'none';
+  openScreen(screenId, { heroDisplay });
+}
+
+function openRouteFromHash() {
+  const routeKey = (window.location.hash || '#home').replace('#', '');
+  const routeHandler = routeMap[routeKey] || showLanding;
+  routeHandler();
+}
 
 function selectAlras(alras) {
   currentAlras = alras;
   const settings = alrasSettings[alras] || alrasSettings['EN ALRAS'];
-  const isHist = alras === 'HIST ALRAS';
-  const isEn = alras === 'EN ALRAS';
   document.querySelector('header .brand h1').textContent = `HPCCSS 5B ${settings.headerName} ALRAS`;
-  document.getElementById('hero-title').textContent = `ALRAS - ${settings.sectionName} Section`;
-  document.getElementById('hero-description').innerHTML = settings.description;
-
-  const primaryTitle = document.getElementById('primary-feature-title');
-  const primaryDesc = document.getElementById('primary-feature-desc');
-  const primaryCard = document.getElementById('primary-feature-card');
-  const secondaryTitle = document.getElementById('secondary-feature-title');
-  const secondaryDesc = document.getElementById('secondary-feature-desc');
-  const secondaryCard = document.getElementById('secondary-feature-card');
-  const tertiaryCard = document.getElementById('tertiary-feature-card');
-  const tertiaryTitle = document.getElementById('tertiary-feature-title');
-  const tertiaryDesc = document.getElementById('tertiary-feature-desc');
-  const quaternaryCard = document.getElementById('quaternary-feature-card');
-
-  if (isHist) {
-    primaryTitle.textContent = 'Common Abbreviations';
-    primaryDesc.textContent = ' Regional, country, policy, politics, and military abbreviations.';
-    primaryCard.setAttribute('onclick', 'openHistoryAbbreviations()');
-    secondaryTitle.textContent = 'Cold War Notes';
-    secondaryDesc.textContent = '(1945 ~ 1991) Cold War Notes';
-    secondaryCard.setAttribute('onclick', 'openColdWarNotes()');
-    tertiaryTitle.textContent = 'Hong Kong History Notes';
-    tertiaryDesc.textContent = '(1900 ~ 2000) Hong Kong History Notes';
-    tertiaryCard.setAttribute('onclick', 'openHkHistoryNotes()');
-    tertiaryCard.classList.remove('hidden');
-    tertiaryCard.style.display = 'block';
-    quaternaryCard.classList.remove('hidden');
-    quaternaryCard.style.display = 'block';
-  } else if (isEn) {
-    primaryTitle.textContent = 'Generic Vocabulary Flashcards';
-    primaryDesc.textContent = 'Tap to enter the built-in flashcard trainer and practice 50+ vocabulary words with meanings and example sentences.';
-    primaryCard.setAttribute('onclick', 'openFlashcards()');
-    secondaryTitle.textContent = 'Wordle Game';
-    secondaryDesc.textContent = 'Challenge yourself with the popular word-guessing game. Guess the five-letter word in 6 attempts using vocabulary from your course.';
-    secondaryCard.setAttribute('onclick', 'openWordle()');
-    tertiaryTitle.textContent = 'Vocabulary Set Challenge';
-    tertiaryDesc.textContent = 'Choose a synonym set and fill in the rest of the words using first-two-letter hints.';
-    tertiaryCard.setAttribute('onclick', 'openSetChallenge()');
-    tertiaryCard.classList.remove('hidden');
-    tertiaryCard.style.display = 'block';
-    quaternaryCard.classList.add('hidden');
-    quaternaryCard.style.display = 'none';
-  } else {
-    primaryTitle.textContent = 'Generic Vocabulary Flashcards';
-    primaryDesc.textContent = 'Tap to enter the built-in flashcard trainer and practice 50+ vocabulary words with meanings and example sentences.';
-    primaryCard.setAttribute('onclick', 'openFlashcards()');
-    secondaryTitle.textContent = 'Wordle Game';
-    secondaryDesc.textContent = 'Challenge yourself with the popular word-guessing game. Guess the five-letter word in 6 attempts using vocabulary from your course.';
-    secondaryCard.setAttribute('onclick', 'openWordle()');
-    tertiaryCard.classList.add('hidden');
-    tertiaryCard.style.display = 'none';
-    quaternaryCard.classList.add('hidden');
-    quaternaryCard.style.display = 'none';
-  }
 
   document.querySelectorAll('.alras-item').forEach((btn) => {
-    btn.classList.toggle('active', btn.textContent === alras);
+    btn.classList.toggle('active', btn.textContent.trim() === alras);
   });
-  document.getElementById('sidebar-update-logs').classList.remove('active');
-  document.querySelector('#update-logs-app .app-header p').textContent = `View recent updates and improvements to ${alras}.`;
-  document.querySelector('#wordle-app .app-header p').textContent = `Guess the five-letter vocabulary word in 6 attempts.`;
+
+  const updateLogText = document.querySelector('#update-logs-app .app-header p');
+  if (updateLogText) {
+    updateLogText.textContent = `View recent updates and improvements to ${alras}.`;
+  }
+
+  const wordleIntro = document.querySelector('#wordle-app .app-header p');
+  if (wordleIntro) {
+    wordleIntro.textContent = `Guess the five-letter vocabulary word in 6 attempts.`;
+  }
+
   showLanding();
 }
 
@@ -219,17 +258,8 @@ function submitSetChallenge() {
 }
 
 function openSetChallenge() {
-  document.getElementById('flashcard-app').style.display = 'none';
-  document.getElementById('history-table-app').style.display = 'none';
-  document.getElementById('cold-war-app').style.display = 'none';
-  document.getElementById('hk-history-app').style.display = 'none';
-  document.getElementById('jp-history-app').style.display = 'none';
-  document.getElementById('update-logs-app').style.display = 'none';
-  document.getElementById('wordle-app').style.display = 'none';
-  document.getElementById('set-challenge-app').style.display = 'block';
-  document.querySelector('.hero').style.display = 'none';
+  openScreen('set-challenge-app', { route: 'challenge' });
   startSetChallenge();
-  document.getElementById('set-challenge-app').scrollIntoView({ behavior: 'smooth' });
 }
 
 function initializeWordle() {
@@ -371,126 +401,72 @@ function submitGuess() {
 }
 
 function openWordle() {
-  document.getElementById('flashcard-app').style.display = 'none';
-  document.getElementById('history-table-app').style.display = 'none';
-  document.getElementById('cold-war-app').style.display = 'none';
-  document.getElementById('hk-history-app').style.display = 'none';
-  document.getElementById('jp-history-app').style.display = 'none';
-  document.getElementById('update-logs-app').style.display = 'none';
-  document.getElementById('set-challenge-app').style.display = 'none';
-  document.getElementById('wordle-app').style.display = 'block';
+  openScreen('wordle-app', { route: 'wordle' });
   initializeWordle();
   document.getElementById('guess-input').disabled = false;
-  document.getElementById('wordle-app').scrollIntoView({ behavior: 'smooth' });
 }
 
 function openHistoryAbbreviations() {
-  document.getElementById('flashcard-app').style.display = 'none';
-  document.getElementById('history-table-app').style.display = 'block';
-  document.getElementById('cold-war-app').style.display = 'none';
-  document.getElementById('hk-history-app').style.display = 'none';
-  document.getElementById('jp-history-app').style.display = 'none';
-  document.getElementById('update-logs-app').style.display = 'none';
-  document.getElementById('set-challenge-app').style.display = 'none';
-  document.getElementById('wordle-app').style.display = 'none';
-  document.querySelector('.hero').style.display = 'none';
-  document.getElementById('history-table-app').scrollIntoView({ behavior: 'smooth' });
+  openScreen('history-table-app', { route: 'abbreviations' });
 }
 
 function openColdWarNotes() {
-  document.getElementById('flashcard-app').style.display = 'none';
-  document.getElementById('history-table-app').style.display = 'none';
-  document.getElementById('cold-war-app').style.display = 'block';
-  document.getElementById('hk-history-app').style.display = 'none';
-  document.getElementById('jp-history-app').style.display = 'none';
-  document.getElementById('update-logs-app').style.display = 'none';
-  document.getElementById('set-challenge-app').style.display = 'none';
-  document.getElementById('wordle-app').style.display = 'none';
-  document.querySelector('.hero').style.display = 'none';
-  document.getElementById('cold-war-app').scrollIntoView({ behavior: 'smooth' });
+  openScreen('cold-war-app', { route: 'cold-war' });
 }
 
 function openHkHistoryNotes() {
-  document.getElementById('flashcard-app').style.display = 'none';
-  document.getElementById('history-table-app').style.display = 'none';
-  document.getElementById('cold-war-app').style.display = 'none';
-  document.getElementById('hk-history-app').style.display = 'block';
-  document.getElementById('jp-history-app').style.display = 'none';
-  document.getElementById('update-logs-app').style.display = 'none';
-  document.getElementById('set-challenge-app').style.display = 'none';
-  document.getElementById('wordle-app').style.display = 'none';
-  document.querySelector('.hero').style.display = 'none';
-  document.getElementById('hk-history-app').scrollIntoView({ behavior: 'smooth' });
+  openScreen('hk-history-app', { route: 'hk-history' });
 }
 
 function openJpHistoryNotes() {
-  document.getElementById('flashcard-app').style.display = 'none';
-  document.getElementById('history-table-app').style.display = 'none';
-  document.getElementById('cold-war-app').style.display = 'none';
-  document.getElementById('hk-history-app').style.display = 'none';
-  document.getElementById('jp-history-app').style.display = 'block';
-  document.getElementById('update-logs-app').style.display = 'none';
-  document.getElementById('set-challenge-app').style.display = 'none';
-  document.getElementById('wordle-app').style.display = 'none';
-  document.querySelector('.hero').style.display = 'none';
-  document.getElementById('jp-history-app').scrollIntoView({ behavior: 'smooth' });
+  openScreen('jp-history-app', { route: 'jp-history' });
 }
 
 function showLanding() {
   document.querySelector('main').scrollIntoView({ behavior: 'smooth' });
-  document.getElementById('flashcard-app').style.display = 'none';
-  document.getElementById('history-table-app').style.display = 'none';
-  document.getElementById('cold-war-app').style.display = 'none';
-  document.getElementById('hk-history-app').style.display = 'none';
-  document.getElementById('jp-history-app').style.display = 'none';
-  document.getElementById('set-challenge-app').style.display = 'none';
-  document.getElementById('update-logs-app').style.display = 'none';
-  document.getElementById('wordle-app').style.display = 'none';
-  document.querySelector('.hero').style.display = 'grid';
+  hideAllScreens();
+  const hero = document.querySelector('.hero, .hero-grid');
+  if (hero) hero.style.display = 'grid';
+  document.getElementById('en-screen')?.classList.add('active');
   const settings = alrasSettings[currentAlras] || alrasSettings['EN ALRAS'];
   document.querySelector('header .brand h1').textContent = `HPCCSS 5B ${settings.headerName} ALRAS`;
+  animateJump('primary-feature-card');
+  setRoute('home');
 }
 
 function openFlashcards() {
-  document.getElementById('flashcard-app').style.display = 'block';
-  document.getElementById('history-table-app').style.display = 'none';
-  document.getElementById('cold-war-app').style.display = 'none';
-  document.getElementById('hk-history-app').style.display = 'none';
-  document.getElementById('jp-history-app').style.display = 'none';
-  document.getElementById('update-logs-app').style.display = 'none';
-  document.getElementById('set-challenge-app').style.display = 'none';
-  document.getElementById('wordle-app').style.display = 'none';
+  openScreen('flashcard-app', { route: 'flashcards', heroDisplay: 'grid' });
   document.getElementById('loading').style.display = 'block';
   document.getElementById('app').style.display = 'none';
   renderCard();
-  document.querySelector('.hero').style.display = 'grid';
-  document.getElementById('flashcard-app').scrollIntoView({ behavior: 'smooth' });
 }
 
 function openUpdateLogs() {
-  document.getElementById('flashcard-app').style.display = 'none';
-  document.getElementById('history-table-app').style.display = 'none';
-  document.getElementById('cold-war-app').style.display = 'none';
-  document.getElementById('hk-history-app').style.display = 'none';
-  document.getElementById('jp-history-app').style.display = 'none';
-  document.getElementById('set-challenge-app').style.display = 'none';
-  document.getElementById('update-logs-app').style.display = 'block';
-  document.getElementById('wordle-app').style.display = 'none';
-  document.querySelector('.hero').style.display = 'none';
+  openScreen('update-logs-app', { route: 'updates' });
   document.querySelector('header .brand h1').textContent = 'HPCCSS 5B ALRAS Update Logs';
   document.querySelectorAll('.alras-item').forEach((btn) => btn.classList.remove('active'));
   document.getElementById('sidebar-update-logs').classList.add('active');
-  document.getElementById('update-logs-app').scrollIntoView({ behavior: 'smooth' });
+}
+
+function openWebsiteUpdates() {
+  openScreen('website-updates-app', { route: 'updates' });
+  document.querySelector('header .brand h1').textContent = 'Website Updates';
+  document.querySelectorAll('.alras-item').forEach((btn) => btn.classList.remove('active'));
 }
 
 window.addEventListener('load', () => {
-  document.getElementById('flashcard-app').style.display = 'none';
-  document.getElementById('history-table-app').style.display = 'none';
-  document.getElementById('cold-war-app').style.display = 'none';
-  document.getElementById('update-logs-app').style.display = 'none';
-  document.getElementById('wordle-app').style.display = 'none';
+  hideAllScreens();
   selectAlras(currentAlras);
+  openRouteFromHash();
   if (typeof cards !== 'undefined' && cards.length === 0) {
     document.getElementById('loading').innerText = 'No data found.';
   }
 });
+
+// Explicitly expose functions to global scope for HTML onclick handlers
+window.submitGuess = submitGuess;
+window.submitSetChallenge = submitSetChallenge;
+window.openWordle = openWordle;
+window.openSetChallenge = openSetChallenge;
+
+window.addEventListener('hashchange', openRouteFromHash);

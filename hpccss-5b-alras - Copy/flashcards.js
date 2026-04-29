@@ -84,7 +84,6 @@ function renderCard() {
   document.getElementById('next-btn').disabled = currentIndex === cards.length - 1;
   document.getElementById('loading').style.display = 'none';
   document.getElementById('app').style.display = 'block';
-  document.getElementById('app').classList.remove('hidden');
 }
 
 function flipCard() {
